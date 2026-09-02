@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diva Casino - Admin Panel</title>
+  
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #0b0b10; color: #fff; padding: 20px 15px; }
+    
+    header {
+      background: #16161e; padding: 15px; border-radius: 12px;
+      border: 1px solid #ff007f; text-align: center; margin-bottom: 20px;
+    }
+    .logo { font-size: 20px; font-weight: bold; color: #ff007f; letter-spacing: 1px; }
+
+    .user-card {
+      background: #16161e; border-radius: 12px; padding: 15px;
+      border: 1px solid #222230; margin-bottom: 12px;
+    }
+    .user-id { font-size: 13px; color: #888; font-weight: bold; margin-bottom: 8px; word-break: break-all; }
+    .user-balance { font-size: 18px; font-weight: bold; color: #00e676; margin-bottom: 12px; }
+
+    .action-row { display: flex; gap: 8px; }
+    .bal-input {
+      background: #0b0b10; border: 1px solid #33334d; color: #fff;
+      padding: 10px; border-radius: 8px; width: 60%; font-size: 14px; outline: none;
+    }
+    .bal-input:focus { border-color: #ff007f; }
+
+    .save-btn {
+      background: linear-gradient(135deg, #ff007f, #7928ca);
+      color: #fff; border: none; padding: 10px; border-radius: 8px;
+      width: 40%; font-weight: bold; cursor: pointer; font-size: 13px;
+    }
+    
+    .empty-msg { text-align: center; color: #666; margin-top: 30px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">İDARƏETMƏ PANELSİ</div>
+  </header>
+
+  <div id="users-list">
+    <div class="empty-msg">İstifadəçilər yüklənir...</div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
+      authDomain: "diva-casino.firebaseapp.com",
+      projectId: "diva-casino",
+      storageBucket: "diva-casino.firebasestorage.app",
+      messagingSenderId: "406269257311",
+      appId: "1:406269257311:web:ef51aa13ccdcd73fff9dea",
+      measurementId: "G-867WKS9NH7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Bütün istifadəçiləri bazadan real-vaxt rejimində çəkirik
+    db.collection('users').onSnapshot(snapshot => {
+      const container = document.getElementById('users-list');
+      container.innerHTML = '';
+
+      if (snapshot.empty) {
+        container.innerHTML = '<div class="empty-msg">Hələ ki heç bir istifadəçi tapılmadı.</div>';
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        const userId = doc.id;
+        const data = doc.data();
+        const balance = Number(data.balance || 0).toFixed(2);
+
+        const card = document.createElement('div');
+        card.className = 'user-card';
+        card.innerHTML = `
+          <div class="user-id">👤 ID / IP: ${userId}</div>
+          <div class="user-balance">Balans: ${balance} AZN</div>
+          <div class="action-row">
+            <input type="number" step="0.1" id="input-${userId}" class="bal-input" placeholder="Yeni AZN yazın">
+            <button class="save-btn" onclick="updateBalance('${userId}')">Yenilə</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+
+    // Balansı bazada yeniləmək üçün funksiya
+    function updateBalance(userId) {
+      const inputEl = document.getElementById(`input-${userId}`);
+      const newBal = parseFloat(inputEl.value);
+
+      if (isNaN(newBal)) {
+        alert("Xahiş olunur düzgün bir məbləğ daxil edin!");
+        return;
+      }
+
+      db.collection('users').doc(userId).update({
+        balance: newBal
+      }).then(() => {
+        alert(`ID: ${userId} üçün balans ${newBal.toFixed(2)} AZN olaraq dəyişdirildi!`);
+        inputEl.value = '';
+      }).catch(err => {
+        alert("Xəta baş verdi: " + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
