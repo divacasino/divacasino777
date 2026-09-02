@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classic Fruit Slot - Diva Casino</title>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #0b0b10; color: #fff; padding-bottom: 30px; text-align: center; }
+    
+    header { background: #16161e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff007f; }
+    .back-btn { background: #222230; color: #fff; border: 1px solid #ff007f; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
+    .balance-badge { background: linear-gradient(135deg, #ff007f, #7928ca); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+
+    .slot-container { max-width: 450px; margin: 20px auto; background: #16161e; border-radius: 20px; padding: 20px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
+    .game-title { color: #ff007f; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+    .reels-window {
+      background: #000; display: flex; justify-content: space-around; align-items: center;
+      padding: 15px 5px; border-radius: 12px; border: 2px solid #ff007f; position: relative; margin-bottom: 20px; overflow: hidden;
+    }
+    
+    .payline {
+      position: absolute; top: 50%; left: 0; right: 0; height: 4px;
+      background: #00e676; box-shadow: 0 0 10px #00e676; display: none; z-index: 10; transform: translateY(-50%);
+    }
+
+    .reel {
+      width: 30%; height: 90px; background: #1f1f2e; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 45px;
+      border: 1px solid #33334d;
+    }
+
+    .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #0b0b10; padding: 10px; border-radius: 12px; }
+    .bet-btn { background: #ff007f; color: #fff; border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    .bet-val { font-weight: bold; font-size: 16px; color: #00e676; }
+
+    .spin-btn {
+      width: 100%; background: linear-gradient(135deg, #ff007f, #7928ca);
+      color: #fff; border: none; padding: 15px; border-radius: 12px;
+      font-size: 18px; font-weight: 900; letter-spacing: 1px; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4); text-transform: uppercase;
+    }
+    .spin-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; }
+
+    .msg-box { margin-top: 15px; min-height: 25px; font-weight: bold; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">← Lobby</a>
+    <div class="balance-badge"><span id="balance-val">0.00</span> AZN</div>
+  </header>
+
+  <div class="slot-container" id="game-box">
+    <div class="game-title">Classic Fruit Slot</div>
+
+    <div class="reels-window">
+      <div class="payline" id="payline"></div>
+      <div class="reel" id="reel1">🍒</div>
+      <div class="reel" id="reel2">🍋</div>
+      <div class="reel" id="reel3">🍇</div>
+    </div>
+
+    <div class="controls">
+      <button class="bet-btn" onclick="changeBet(-0.20)">-</button>
+      <div>Mərc: <span class="bet-val" id="bet-val">0.20</span> AZN</div>
+      <button class="bet-btn" onclick="changeBet(0.20)">+</button>
+    </div>
+
+    <button class="spin-btn" id="spin-btn" onclick="spin()">FIRLAT 🎰</button>
+
+    <div class="msg-box" id="msg-box"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
+      authDomain: "diva-casino.firebaseapp.com",
+      projectId: "diva-casino",
+      storageBucket: "diva-casino.firebasestorage.app",
+      messagingSenderId: "406269257311",
+      appId: "1:406269257311:web:ef51aa13ccdcd73fff9dea",
+      measurementId: "G-867WKS9NH7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const fruits = ['🍒', '🍋', '🍇', '🔔', '💎', '7️⃣'];
+    let currentBalance = 0;
+    let currentBet = 0.20;
+
+    // Sabit İstifadəçi Kodu Oxumaq
+    let userId = localStorage.getItem('diva_user_id');
+    if (!userId) {
+      userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
+      localStorage.setItem('diva_user_id', userId);
+    }
+
+    // Balans və Ban Vəziyyətini Yoxlamaq
+    db.collection('users').doc(userId).onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        
+        // Ban yoxlanışı
+        if (data.isBanned) {
+          document.body.innerHTML = "<h1 style='color:#ff007f; margin-top:100px;'>HESABINIZ BLOKLANIB!</h1><p style='margin-top:10px;'>Administratorla əlaqə saxlayın.</p>";
+          return;
+        }
+
+        currentBalance = data.balance || 0;
+        document.getElementById('balance-val').innerText = Number(currentBalance).toFixed(2);
+      }
+    });
+
+    function changeBet(val) {
+      currentBet = Math.max(0.20, Math.round((currentBet + val) * 100) / 100);
+      document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    }
+
+    function spin() {
+      if (currentBalance < currentBet) {
+        document.getElementById('msg-box').style.color = "#ff007f";
+        document.getElementById('msg-box').innerText = "Kifayət qədər balans yoxdur!";
+        return;
+      }
+
+      currentBalance -= currentBet;
+      db.collection('users').doc(userId).update({ balance: currentBalance });
+
+      const spinBtn = document.getElementById('spin-btn');
+      spinBtn.disabled = true;
+      document.getElementById('payline').style.display = 'none';
+      document.getElementById('msg-box').innerText = "";
+
+      let counter = 0;
+      const interval = setInterval(() => {
+        document.getElementById('reel1').innerText = fruits[Math.floor(Math.random() * fruits.length)];
+        document.getElementById('reel2').innerText = fruits[Math.floor(Math.random() * fruits.length)];
+        document.getElementById('reel3').innerText = fruits[Math.floor(Math.random() * fruits.length)];
+        counter++;
+
+        if (counter > 15) {
+          clearInterval(interval);
+          checkWin();
+          spinBtn.disabled = false;
+        }
+      }, 100);
+    }
+
+    function checkWin() {
+      const r1 = document.getElementById('reel1').innerText;
+      const r2 = document.getElementById('reel2').innerText;
+      const r3 = document.getElementById('reel3').innerText;
+
+      if (r1 === r2 && r2 === r3) {
+        const winAmount = currentBet * 5;
+        currentBalance += winAmount;
+        db.collection('users').doc(userId).update({ balance: currentBalance });
+
+        document.getElementById('payline').style.display = 'block';
+        document.getElementById('msg-box').style.color = "#00e676";
+        document.getElementById('msg-box').innerText = `TƏBRİKLƏR! +${winAmount.toFixed(2)} AZN UDDUZ! 💥`;
+      } else {
+        document.getElementById('msg-box').style.color = "#aaa";
+        document.getElementById('msg-box').innerText = "Bəxtinizi bir daha sınayın!";
+      }
+    }
+  </script>
+</body>
+</html>
