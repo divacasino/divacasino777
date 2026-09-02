@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic 4x3 Slot - Diva Casino</title>
+  <title>Profil - Diva Casino</title>
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -14,97 +14,49 @@
     
     header { background: #16161e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff007f; }
     .back-btn { background: #222230; color: #fff; border: 1px solid #ff007f; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
-    .balance-badge { background: linear-gradient(135deg, #ff007f, #7928ca); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
 
-    .slot-container { max-width: 450px; margin: 20px auto; background: #16161e; border-radius: 20px; padding: 20px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
-    .game-title { color: #ff007f; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .profile-container { max-width: 400px; margin: 30px auto; background: #16161e; border-radius: 20px; padding: 25px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
+    
+    .avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #ff007f; margin-bottom: 15px; box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); }
+    .user-id { color: #888; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
 
-    /* 3 Sütun x 4 Sıra Tor Qəfəsi */
-    .reels-grid {
-      background: #000;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: 8px;
-      padding: 12px;
-      border-radius: 12px;
-      border: 2px solid #ff007f;
-      position: relative;
-      margin-bottom: 20px;
-    }
+    .info-card { background: #0b0b10; border: 1px solid #222230; border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: left; }
+    .info-title { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .info-val { font-size: 18px; font-weight: bold; color: #00e676; }
 
-    .cell {
-      height: 65px;
-      background: #1f1f2e;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      border: 1px solid #33334d;
-      transition: background 0.3s;
-    }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+    .status-active { background: rgba(0, 230, 118, 0.2); color: #00e676; border: 1px solid #00e676; }
+    .status-banned { background: rgba(255, 0, 127, 0.2); color: #ff007f; border: 1px solid #ff007f; }
 
-    .cell.win-cell {
-      background: #2e7d32;
-      border-color: #00e676;
-      box-shadow: 0 0 10px #00e676;
-    }
-
-    .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #0b0b10; padding: 10px; border-radius: 12px; }
-    .bet-btn { background: #ff007f; color: #fff; border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-    .bet-val { font-weight: bold; font-size: 16px; color: #00e676; }
-
-    .spin-btn {
+    .action-btn {
       width: 100%; background: linear-gradient(135deg, #ff007f, #7928ca);
-      color: #fff; border: none; padding: 15px; border-radius: 12px;
-      font-size: 18px; font-weight: 900; letter-spacing: 1px; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4); text-transform: uppercase;
+      color: #fff; border: none; padding: 12px; border-radius: 12px;
+      font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; margin-top: 20px;
     }
-    .spin-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; }
-
-    .msg-box { margin-top: 15px; min-height: 45px; font-weight: bold; font-size: 15px; line-height: 1.4; }
   </style>
 </head>
 <body>
 
   <header>
     <a href="index.html" class="back-btn">← Lobby</a>
-    <div class="balance-badge"><span id="balance-val">0.00</span> AZN</div>
+    <div style="font-weight: bold; color: #ff007f;">ŞƏXSİ HESAB</div>
   </header>
 
-  <div class="slot-container" id="game-box">
-    <div class="game-title">Classic 4x3 Slot</div>
+  <div class="profile-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar" class="avatar">
+    <div class="user-id" id="display-id">ID: Yüklənir...</div>
 
-    <!-- 3 Sütun, 4 Sıradan ibarət şəbəkə -->
-    <div class="reels-grid">
-      <!-- Sıra 1 -->
-      <div class="cell" id="c_0_0">🍒</div>
-      <div class="cell" id="c_0_1">🍋</div>
-      <div class="cell" id="c_0_2">🍇</div>
-      <!-- Sıra 2 -->
-      <div class="cell" id="c_1_0">🔔</div>
-      <div class="cell" id="c_1_1">💎</div>
-      <div class="cell" id="c_1_2">7️⃣</div>
-      <!-- Sıra 3 -->
-      <div class="cell" id="c_2_0">🍇</div>
-      <div class="cell" id="c_2_1">🍒</div>
-      <div class="cell" id="c_2_2">🍋</div>
-      <!-- Sıra 4 -->
-      <div class="cell" id="c_3_0">💎</div>
-      <div class="cell" id="c_3_1">7️⃣</div>
-      <div class="cell" id="c_3_2">🔔</div>
+    <div class="info-card">
+      <div class="info-title">Ümumi Balans</div>
+      <div class="info-val" id="display-balance">0.00 AZN</div>
     </div>
 
-    <div class="controls">
-      <button class="bet-btn" onclick="changeBet(-0.20)">-</button>
-      <div>Mərc: <span class="bet-val" id="bet-val">0.20</span> AZN</div>
-      <button class="bet-btn" onclick="changeBet(0.20)">+</button>
+    <div class="info-card">
+      <div class="info-title">Hesab Statusu</div>
+      <div id="display-status"><span class="status-badge status-active">Aktiv</span></div>
     </div>
 
-    <button class="spin-btn" id="spin-btn" onclick="spin()">FIRLAT 🎰</button>
-
-    <div class="msg-box" id="msg-box"></div>
+    <a href="index.html" class="action-btn">Oyunlara Qayıt</a>
   </div>
 
   <script>
@@ -121,16 +73,13 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const fruits = ['🍒', '🍋', '🍇', '🔔', '💎', '7️⃣'];
-    let currentBalance = 0;
-    let currentBet = 0.20;
-    let userWinRate = 50; // Standart Şans 50%
-
     let userId = localStorage.getItem('diva_user_id');
     if (!userId) {
       userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
       localStorage.setItem('diva_user_id', userId);
     }
+
+    document.getElementById('display-id').innerText = "ID: " + userId;
 
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
@@ -141,9 +90,15 @@
           return;
         }
 
-        currentBalance = data.balance || 0;
-        userWinRate = data.winRate !== undefined ? data.winRate : 50;
-        document.getElementById('balance-val').innerText = Number(currentBalance).toFixed(2);
+        const balance = Number(data.balance || 0).toFixed(2);
+        document.getElementById('display-balance').innerText = balance + " AZN";
+        
+        const statusEl = document.getElementById('display-status');
+        if (data.isBanned) {
+          statusEl.innerHTML = '<span class="status-badge status-banned">Bloklanıb</span>';
+        } else {
+          statusEl.innerHTML = '<span class="status-badge status-active">Aktiv</span>';
+        }
       } else {
         db.collection('users').doc(userId).set({
           balance: 0,
@@ -153,91 +108,6 @@
         });
       }
     });
-
-    function changeBet(val) {
-      currentBet = Math.max(0.20, Math.round((currentBet + val) * 100) / 100);
-      document.getElementById('bet-val').innerText = currentBet.toFixed(2);
-    }
-
-    function clearWinEffects() {
-      for (let r = 0; r < 4; r++) {
-        for (let c = 0; c < 3; c++) {
-          document.getElementById(`c_${r}_${c}`).classList.remove('win-cell');
-        }
-      }
-    }
-
-    function spin() {
-      if (currentBalance < currentBet) {
-        document.getElementById('msg-box').style.color = "#ff007f";
-        document.getElementById('msg-box').innerText = "Kifayət qədər balans yoxdur!";
-        return;
-      }
-
-      currentBalance -= currentBet;
-      db.collection('users').doc(userId).update({ balance: currentBalance });
-
-      const spinBtn = document.getElementById('spin-btn');
-      spinBtn.disabled = true;
-      clearWinEffects();
-      document.getElementById('msg-box').innerText = "";
-
-      let counter = 0;
-      const interval = setInterval(() => {
-        for (let r = 0; r < 4; r++) {
-          for (let c = 0; c < 3; c++) {
-            document.getElementById(`c_${r}_${c}`).innerText = fruits[Math.floor(Math.random() * fruits.length)];
-          }
-        }
-        counter++;
-
-        if (counter > 15) {
-          clearInterval(interval);
-          checkWin();
-          spinBtn.disabled = false;
-        }
-      }, 100);
-    }
-
-    function checkWin() {
-      const randomChance = Math.floor(Math.random() * 100);
-      const isWinner = randomChance < userWinRate;
-
-      if (isWinner) {
-        // Təsadüfi bir sıranı (0, 1, 2 və ya 3-cü sıranı) uduş sırası edirik
-        const winRow = Math.floor(Math.random() * 4);
-        const winSymbol = fruits[Math.floor(Math.random() * fruits.length)];
-
-        document.getElementById(`c_${winRow}_0`).innerText = winSymbol;
-        document.getElementById(`c_${winRow}_1`).innerText = winSymbol;
-        document.getElementById(`c_${winRow}_2`).innerText = winSymbol;
-
-        // Udulan sıranı yaşıl işıqla vurğulayırıq
-        document.getElementById(`c_${winRow}_0`).classList.add('win-cell');
-        document.getElementById(`c_${winRow}_1`).classList.add('win-cell');
-        document.getElementById(`c_${winRow}_2`).classList.add('win-cell');
-
-        const winAmount = currentBet * 5;
-        currentBalance += winAmount;
-        db.collection('users').doc(userId).update({ balance: currentBalance });
-
-        document.getElementById('msg-box').style.color = "#00e676";
-        document.getElementById('msg-box').innerHTML = `🎉 TƏBRİKLƏR! UDDUZ: +${winAmount.toFixed(2)} AZN<br><span style="color:#fff; font-size:13px;">Hazırkı Balans: ${currentBalance.toFixed(2)} AZN</span>`;
-      } else {
-        // Uduş olmadıqda heç bir sırada 3 eyni simvolun düşməməsini təmin edirik
-        for (let r = 0; r < 4; r++) {
-          const s1 = document.getElementById(`c_${r}_0`).innerText;
-          const s2 = document.getElementById(`c_${r}_1`).innerText;
-          const s3 = document.getElementById(`c_${r}_2`).innerText;
-          if (s1 === s2 && s2 === s3) {
-            document.getElementById(`c_${r}_2`).innerText = fruits[(fruits.indexOf(s3) + 1) % fruits.length];
-          }
-        }
-
-        document.getElementById('msg-box').style.color = "#aaa";
-        document.getElementById('msg-box').innerText = "Bəxtinizi bir daha sınayın!";
-      }
-    }
   </script>
 </body>
 </html>
