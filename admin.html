@@ -40,6 +40,10 @@
     .big-square-btn:hover { background: #ff007f; color: #fff; }
     .big-square-btn span { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
 
+    /* Axtarış Qutusu */
+    .search-box { width: 100%; padding: 12px; background: #16161e; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 15px; margin-bottom: 15px; outline: none; }
+    .search-box:focus { border-color: #ff007f; }
+
     /* Oyunçular Siyahısı Ekranı */
     .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
     .tab-btn { flex: 1; padding: 10px; background: #16161e; border: 1px solid #333; color: #aaa; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -75,13 +79,12 @@
     
     .save-btn { width: 100%; background: #00e676; color: #111; padding: 15px; border-radius: 8px; border: none; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
 
-    /* Gizlətmə class-ı */
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- 1. Təhlükəsizlik Login Ekranı -->
+  <!-- Təhlükəsizlik Login Ekranı -->
   <div id="login-screen">
     <div class="login-box">
       <h2>Sistemə Giriş</h2>
@@ -98,7 +101,7 @@
 
   <div class="container">
     
-    <!-- 2. Dashboard Ekranı -->
+    <!-- Dashboard Ekranı -->
     <div id="dashboard-view">
       <div class="stats-panel">
         <div class="stat-card">
@@ -116,18 +119,22 @@
       </div>
     </div>
 
-    <!-- 3. Oyunçular Siyahısı Ekranı -->
+    <!-- Oyunçular Siyahısı Ekranı -->
     <div id="list-view" class="hidden">
+      <!-- Axtarış Qutusu -->
+      <input type="text" id="search-input" class="search-box" placeholder="Oyunçu ID-si ilə axtar..." oninput="renderList()">
+
       <div class="tabs">
         <div class="tab-btn active" id="tab-all" onclick="filterList('all')">Hamısı</div>
         <div class="tab-btn" id="tab-active" onclick="filterList('active')">Aktiv Olanlar</div>
       </div>
+      
       <div class="player-list" id="players-container">
         <!-- Siyahı JS ilə yüklənəcək -->
       </div>
     </div>
 
-    <!-- 4. Oyunçu Parametrləri (Detal) Ekranı -->
+    <!-- Oyunçu Parametrləri (Detal) Ekranı -->
     <div id="detail-view" class="hidden">
       <div class="detail-card">
         <div class="detail-header">
@@ -167,10 +174,6 @@
   </div>
 
   <script>
-    // --- TƏHLÜKƏSİZLİK YOXLANIŞI ---
-    // Əsas kodu kiber müdaxilələrdən təmizləmək üçün daxil edilən datanı filterləyirik (Sadə Anti-XSS)
-    function sanitize(str) { return str.replace(/[^\w\s.-]/gi, ''); }
-
     function checkLogin() {
       const pwd = document.getElementById("admin-pwd").value;
       if (pwd === "salam123") {
@@ -180,7 +183,7 @@
       }
     }
 
-    // --- FİREBASE CONFİG ---
+    // FİREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
       authDomain: "diva-casino.firebaseapp.com",
@@ -218,7 +221,6 @@
       if (currentView === 'list-view') renderList();
     });
 
-    // Səhifə Naviqasiyası
     function showView(viewId) {
       document.getElementById("dashboard-view").classList.add("hidden");
       document.getElementById("list-view").classList.add("hidden");
@@ -244,7 +246,6 @@
       }
     }
 
-    // Siyahı Filteri
     function filterList(type) {
       currentFilter = type;
       document.getElementById('tab-all').classList.remove('active');
@@ -253,13 +254,27 @@
       renderList();
     }
 
+    // Oyunçuları Siyahıtlama və Axtarış Məntiqi
     function renderList() {
       const container = document.getElementById("players-container");
+      const searchQuery = document.getElementById("search-input").value.trim().toLowerCase();
       container.innerHTML = "";
 
       let filteredUsers = allUsers;
+
+      // Tab filteri
       if (currentFilter === 'active') {
-        filteredUsers = allUsers.filter(u => u.isOnline);
+        filteredUsers = filteredUsers.filter(u => u.isOnline);
+      }
+
+      // ID axtarış filteri
+      if (searchQuery !== "") {
+        filteredUsers = filteredUsers.filter(u => u.uid.toLowerCase().includes(searchQuery));
+      }
+
+      if (filteredUsers.length === 0) {
+        container.innerHTML = "<div style='text-align:center; color:#777; padding:20px;'>Oyunçu tapılmadı</div>";
+        return;
       }
 
       filteredUsers.forEach(user => {
@@ -278,19 +293,16 @@
       });
     }
 
-    // Oyunçu Detal Səhifəsi
     function openUserDetail(uid) {
       selectedUserId = uid;
       selectedUserDoc = allUsers.find(u => u.uid === uid);
       
       document.getElementById("det-id").innerText = "ID: " + uid;
       document.getElementById("det-status").className = "dot " + (selectedUserDoc.isOnline ? "dot-online" : "dot-offline");
-      
-      // Oyunçunun olduğu yer (gələcəkdə oyunlarda bu fieldi yeniləmək lazımdır)
-      document.getElementById("det-game").innerText = selectedUserDoc.currentGame ? "Hal-hazırda: " + selectedUserDoc.currentGame : "Hal-hazırda: Naməlum/Ana Səhifə";
+      document.getElementById("det-game").innerText = selectedUserDoc.currentGame ? "Hal-hazırda: " + selectedUserDoc.currentGame : "Hal-hazırda: Ana Səhifə";
       
       document.getElementById("det-bal").value = selectedUserDoc.balance || 0;
-      document.getElementById("det-win").value = selectedUserDoc.winRate || 50;
+      document.getElementById("det-win").value = selectedUserDoc.winRate !== undefined ? selectedUserDoc.winRate : 50;
       
       const banBtn = document.getElementById("det-ban-btn");
       if (selectedUserDoc.isBanned) {
@@ -304,7 +316,6 @@
       showView('detail-view');
     }
 
-    // +/- Düymələri
     function adjustVal(inputId, amount) {
       const input = document.getElementById(inputId);
       let val = parseFloat(input.value) || 0;
@@ -329,7 +340,6 @@
       }
     }
 
-    // Baza yeniləmə
     function saveUserData() {
       const newBal = parseFloat(document.getElementById("det-bal").value) || 0;
       const newWin = parseFloat(document.getElementById("det-win").value) || 50;
@@ -340,13 +350,12 @@
         isBanned: selectedUserDoc.isBanned || false
       }).then(() => {
         alert("Məlumatlar uğurla yeniləndi!");
-        goBack(); // Yadda saxladıqdan sonra siyahıya qayıdır
+        goBack();
       }).catch(err => {
         alert("Xəta baş verdi: " + err);
       });
     }
 
-    // Hər 10 saniyədən bir online/offline statuslarını canlı yoxlamaq üçün kiçik refresh
     setInterval(() => { if(currentView === 'list-view') renderList(); }, 10000);
   </script>
 </body>
