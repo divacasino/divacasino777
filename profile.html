@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Diva Casino - Ana Səhifə</title>
+  <title>Diva Casino - Hesabım</title>
   
   <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -13,51 +13,31 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background: #0b0b10; color: #fff; padding-bottom: 80px; }
     
-    /* Header */
-    header {
-      background: rgba(22, 22, 30, 0.95);
-      padding: 15px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid #ff007f; position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-    .logo { font-size: 22px; font-weight: 900; color: #ff007f; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255, 0, 127, 0.6); }
+    header { background: #16161e; padding: 15px 20px; text-align: center; border-bottom: 2px solid #ff007f; }
+    .logo { font-size: 20px; font-weight: bold; color: #ff007f; letter-spacing: 1px; }
     
-    .balance-badge {
-      background: linear-gradient(135deg, #ff007f, #7928ca);
-      padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
-    }
-
-    .container { max-width: 900px; margin: 0 auto; padding: 20px 15px; }
-
-    /* Oyunlar Siyahısı */
-    .section-title { font-size: 16px; color: #888; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+    .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+    .card { background: #16161e; border-radius: 14px; padding: 20px; border: 1px solid #222230; margin-bottom: 15px; }
+    .card-title { font-size: 14px; color: #888; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
     
-    .game-card {
-      background: #16161e; border-radius: 14px; overflow: hidden;
-      border: 1px solid #222230; transition: 0.3s; text-decoration: none; color: #fff; display: block;
-    }
-    .game-card:hover { transform: translateY(-5px); border-color: #ff007f; box-shadow: 0 5px 20px rgba(255, 0, 127, 0.3); }
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222230; font-size: 14px; }
+    .info-row:last-child { border: none; }
+    .val { color: #ff007f; font-weight: bold; }
     
-    .game-thumb {
-      height: 110px; background: #222230; display: flex; align-items: center; justify-content: center;
-      font-size: 50px; position: relative;
+    .notice-box {
+      background: rgba(255, 0, 127, 0.05);
+      border: 1px dashed #ff007f;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.5;
     }
-    .badge {
-      position: absolute; top: 8px; right: 8px; background: #ff007f;
-      font-size: 9px; font-weight: bold; padding: 3px 6px; border-radius: 6px; text-transform: uppercase;
-    }
-    
-    .game-details { padding: 12px; }
-    .game-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-    .game-min { font-size: 11px; color: #777; }
 
     /* Naviqasiya Barı */
     nav {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: #16161e; display: flex; justify-space-around: space-around;
+      background: #16161e; display: flex; justify-content: space-around;
       padding: 12px 0; border-top: 1px solid #222230;
     }
     .nav-link { color: #777; text-decoration: none; font-size: 11px; text-align: center; font-weight: bold; width: 50%; }
@@ -68,36 +48,40 @@
 <body>
 
   <header>
-    <div class="logo">DIVA CASINO</div>
-    <div class="balance-badge"><span id="balance-val">0.00</span> AZN</div>
+    <div class="logo">ŞƏXSİ HESAB</div>
   </header>
 
   <div class="container">
-    <div class="section-title">Kazino Oyunları</div>
+    <div class="card">
+      <div class="card-title">Hesab Məlumatları</div>
+      <div class="info-row">
+        <span>İstifadəçi Kodu (ID):</span>
+        <span class="val" id="user-id-val">Yüklənir...</span>
+      </div>
+      <div class="info-row">
+        <span>Cari Balans:</span>
+        <span class="val" id="balance-val">0.00 AZN</span>
+      </div>
+      <div class="info-row">
+        <span>Status:</span>
+        <span style="color:#00e676; font-weight:bold;">Aktiv İstifadəçi</span>
+      </div>
+    </div>
 
-    <div class="games-grid">
-      
-      <!-- Slot 1 -->
-      <a href="slot1.html" class="game-card">
-        <div class="game-thumb">
-          🎰
-          <span class="badge">AKTİV</span>
-        </div>
-        <div class="game-details">
-          <div class="game-title">Meyvə Slotu</div>
-          <div class="game-min">Mərc: Min 0.20 AZN</div>
-        </div>
-      </a>
-
+    <div class="card">
+      <div class="card-title">Balans Əməliyyatları</div>
+      <div class="notice-box">
+        Balans artırmaq və ya uduşlarınızı nəğdləşdirmək üçün administratora yuxarıda göstərilən <b>İstifadəçi Kodunuzu (ID)</b> təqdim edin.
+      </div>
     </div>
   </div>
 
   <!-- Alt Menyu -->
   <nav>
-    <a href="index.html" class="nav-link active">
+    <a href="index.html" class="nav-link">
       <span class="nav-icon">🎮</span> Oyunlar
     </a>
-    <a href="profile.html" class="nav-link">
+    <a href="profile.html" class="nav-link active">
       <span class="nav-icon">👤</span> Hesabım
     </a>
   </nav>
@@ -116,24 +100,20 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Sabit İstifadəçi ID-si Yaratmaq / Oxumaq
+    // Sabit İstifadəçi ID-si Oxumaq
     let userId = localStorage.getItem('diva_user_id');
     if (!userId) {
       userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
       localStorage.setItem('diva_user_id', userId);
     }
 
+    document.getElementById('user-id-val').innerText = userId;
+
     // Bazadan məlumatları çəkmək
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
         const bal = doc.data().balance || 0;
-        document.getElementById('balance-val').innerText = Number(bal).toFixed(2);
-      } else {
-        db.collection('users').doc(userId).set({ 
-          balance: 0, 
-          createdAt: new Date() 
-        });
-        document.getElementById('balance-val').innerText = "0.00";
+        document.getElementById('balance-val').innerText = Number(bal).toFixed(2) + " AZN";
       }
     });
   </script>
