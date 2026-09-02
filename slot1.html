@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic 4x3 Slot - Diva Casino</title>
+  <title>Mega Fruit 4x3 Slot - Diva Casino</title>
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -17,7 +17,11 @@
     .balance-badge { background: linear-gradient(135deg, #ff007f, #7928ca); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
 
     .slot-container { max-width: 480px; margin: 20px auto; background: #16161e; border-radius: 20px; padding: 20px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
-    .game-title { color: #ff007f; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    /* Oyun Loqosu və Adı */
+    .game-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+    .game-logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f; }
+    .game-title { color: #ff007f; font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
 
     .reels-grid {
       background: #000;
@@ -32,6 +36,7 @@
       margin-bottom: 20px;
     }
 
+    /* Slot Xanaları və Animasiyalar */
     .cell {
       height: 75px;
       background: #1f1f2e;
@@ -39,15 +44,33 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 32px;
       border: 1px solid #33334d;
-      transition: background 0.3s;
+      transition: transform 0.1s, background 0.3s;
+      user-select: none;
     }
 
+    /* Fırlanma (Spinning) Animasiyası */
+    .spinning {
+      animation: blurSpin 0.1s infinite linear;
+    }
+
+    @keyframes blurSpin {
+      0% { transform: translateY(-5px) scaleY(1.1); filter: blur(2px); opacity: 0.7; }
+      50% { transform: translateY(5px) scaleY(0.9); filter: blur(3px); opacity: 0.5; }
+      100% { transform: translateY(-5px) scaleY(1.1); filter: blur(2px); opacity: 0.7; }
+    }
+
+    /* Uduş (Win) Animasiyası */
     .cell.win-cell {
-      background: #2e7d32;
-      border-color: #00e676;
-      box-shadow: 0 0 10px #00e676;
+      background: #2e7d32 !important;
+      border-color: #00e676 !important;
+      animation: winPulse 0.6s infinite alternate ease-in-out;
+    }
+
+    @keyframes winPulse {
+      0% { transform: scale(1); box-shadow: 0 0 5px #00e676; }
+      100% { transform: scale(1.08); box-shadow: 0 0 20px #00e676, 0 0 30px #00e676; }
     }
 
     .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #0b0b10; padding: 10px; border-radius: 12px; }
@@ -64,7 +87,9 @@
       color: #fff; border: none; padding: 15px; border-radius: 12px;
       font-size: 18px; font-weight: 900; letter-spacing: 1px; cursor: pointer;
       box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4); text-transform: uppercase;
+      transition: transform 0.1s;
     }
+    .spin-btn:active { transform: scale(0.98); }
     .spin-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; }
 
     .msg-box { margin-top: 15px; min-height: 45px; font-weight: bold; font-size: 15px; line-height: 1.4; }
@@ -78,7 +103,12 @@
   </header>
 
   <div class="slot-container" id="game-box">
-    <div class="game-title">Fruit Slot 4x3</div>
+    
+    <!-- Oyunun Şəkli və Adı -->
+    <div class="game-header">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055823.png" alt="Fruit Icon" class="game-logo">
+      <div class="game-title">Mega Fruit 4x3</div>
+    </div>
 
     <div class="reels-grid">
       <div class="cell" id="c_0_0">🍒</div>
@@ -180,7 +210,8 @@
     function clearWinEffects() {
       for (let r = 0; r < 3; r++) {
         for (let c = 0; c < 4; c++) {
-          document.getElementById(`c_${r}_${c}`).classList.remove('win-cell');
+          const el = document.getElementById(`c_${r}_${c}`);
+          el.classList.remove('win-cell', 'spinning');
         }
       }
     }
@@ -202,6 +233,13 @@
       clearWinEffects();
       document.getElementById('msg-box').innerText = "";
 
+      // Bütün xanalara fırlanma (blur/spin) animasiyası əlavə olunur
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 4; c++) {
+          document.getElementById(`c_${r}_${c}`).classList.add('spinning');
+        }
+      }
+
       let counter = 0;
       const interval = setInterval(() => {
         for (let r = 0; r < 3; r++) {
@@ -211,12 +249,13 @@
         }
         counter++;
 
-        if (counter > 12) {
+        if (counter > 15) {
           clearInterval(interval);
+          clearWinEffects();
           checkWin(currentBet);
           spinBtn.disabled = false;
         }
-      }, 80);
+      }, 70);
     }
 
     function checkWin(currentBet) {
@@ -228,8 +267,9 @@
         const winSymbol = fruits[Math.floor(Math.random() * fruits.length)];
 
         for (let c = 0; c < 4; c++) {
-          document.getElementById(`c_${winRow}_${c}`).innerText = winSymbol;
-          document.getElementById(`c_${winRow}_${c}`).classList.add('win-cell');
+          const winCell = document.getElementById(`c_${winRow}_${c}`);
+          winCell.innerText = winSymbol;
+          winCell.classList.add('win-cell'); // Animasiyalı yaşıl parıltı
         }
 
         const mult = multipliers[winSymbol] || 2;
@@ -238,7 +278,7 @@
         db.collection('users').doc(userId).update({ balance: currentBalance });
 
         document.getElementById('msg-box').style.color = "#00e676";
-        document.getElementById('msg-box').innerHTML = `🎉 UDDUZ: +${winAmount.toFixed(2)} AZN (${winSymbol} x${mult})<br><span style="color:#fff; font-size:13px;">Hazırkı Balans: ${currentBalance.toFixed(2)} AZN</span>`;
+        document.getElementById('msg-box').innerHTML = `🎉 UDUŞ! +${winAmount.toFixed(2)} AZN (${winSymbol} x${mult})<br><span style="color:#fff; font-size:13px;">Hazırkı Balans: ${currentBalance.toFixed(2)} AZN</span>`;
       } else {
         for (let r = 0; r < 3; r++) {
           const s1 = document.getElementById(`c_${r}_0`).innerText;
