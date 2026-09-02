@@ -4,26 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diva Casino - Hesabım</title>
+  
+  <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background: #0b0b10; color: #fff; padding-bottom: 80px; }
-    header { background: #16161e; padding: 15px 20px; text-align: center; border-bottom: 2px solid #ff007f; }
-    .logo { font-size: 20px; font-weight: bold; color: #ff007f; }
     
-    .container { max-width: 600px; margin: 20px auto; padding: 15px; }
+    header { background: #16161e; padding: 15px 20px; text-align: center; border-bottom: 2px solid #ff007f; }
+    .logo { font-size: 20px; font-weight: bold; color: #ff007f; letter-spacing: 1px; }
+    
+    .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
     .card { background: #16161e; border-radius: 14px; padding: 20px; border: 1px solid #222230; margin-bottom: 15px; }
-    .card-title { font-size: 16px; color: #888; margin-bottom: 15px; text-transform: uppercase; }
-    .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222230; font-size: 14px; }
+    .card-title { font-size: 14px; color: #888; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+    
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222230; font-size: 14px; }
     .info-row:last-child { border: none; }
     .val { color: #ff007f; font-weight: bold; }
     
-    .deposit-btn {
-      width: 100%; background: #00e676; color: #000; border: none; padding: 14px;
-      border-radius: 10px; font-weight: bold; font-size: 15px; margin-top: 10px; cursor: pointer;
+    .notice-box {
+      background: rgba(255, 0, 127, 0.05);
+      border: 1px dashed #ff007f;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.5;
     }
 
+    /* Naviqasiya Barı */
     nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #16161e; display: flex; justify-content: space-around;
@@ -42,28 +53,30 @@
 
   <div class="container">
     <div class="card">
-      <div class="card-title">İstifadəçi Profilı</div>
+      <div class="card-title">Hesab Məlumatları</div>
       <div class="info-row">
-        <span>IP Ünvanı:</span>
+        <span>IP Ünvanınız:</span>
         <span class="val" id="ip-val">Yüklənir...</span>
       </div>
       <div class="info-row">
-        <span>DIV Balansı:</span>
-        <span class="val" id="balance-val">0 DIV</span>
+        <span>Cari Balans:</span>
+        <span class="val" id="balance-val">0.00 AZN</span>
       </div>
       <div class="info-row">
-        <span>Hesab Statusu:</span>
-        <span style="color:#00e676; font-weight:bold;">Aktiv</span>
+        <span>Status:</span>
+        <span style="color:#00e676; font-weight:bold;">Aktiv İstifadəçi</span>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Balans Artırılması</div>
-      <p style="font-size:13px; color:#aaa; margin-bottom:10px;">Balansı artırmaq və ya çıxarış etmək üçün Admin ilə əlaqə saxlayın.</p>
-      <button class="deposit-btn" onclick="alert('Adminlə əlaqə saxlayın!')">Balans Yüklə (Admin)</button>
+      <div class="card-title">Balans Əməliyyatları</div>
+      <div class="notice-box">
+        Balans artırmaq və ya uduşlarınızı nəğdləşdirmək üçün sistem administratoru ilə əlaqə saxlayın. IP ünvanınızı təqdim edərək hesabınıza birbaşa məbləğ əlavə etdirə bilərsiniz.
+      </div>
     </div>
   </div>
 
+  <!-- Alt Menyu -->
   <nav>
     <a href="index.html" class="nav-link">
       <span class="nav-icon">🎮</span> Oyunlar
@@ -75,12 +88,13 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "SƏNİN_API_KEY",
-      authDomain: "SƏNİN_AUTH_DOMAIN",
-      projectId: "SƏNİN_PROJECT_ID",
-      storageBucket: "SƏNİN_STORAGE_BUCKET",
-      messagingSenderId: "SƏNİN_MESSAGING_ID",
-      appId: "SƏNİN_APP_ID"
+      apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
+      authDomain: "diva-casino.firebaseapp.com",
+      projectId: "diva-casino",
+      storageBucket: "diva-casino.firebasestorage.app",
+      messagingSenderId: "406269257311",
+      appId: "1:406269257311:web:ef51aa13ccdcd73fff9dea",
+      measurementId: "G-867WKS9NH7"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -91,9 +105,11 @@
       .then(data => {
         document.getElementById('ip-val').innerText = data.ip;
         const currentIP = data.ip.replaceAll('.', '_');
+        
         db.collection('users').doc(currentIP).onSnapshot(doc => {
           if (doc.exists) {
-            document.getElementById('balance-val').innerText = doc.data().balance + " DIV";
+            const bal = doc.data().balance || 0;
+            document.getElementById('balance-val').innerText = Number(bal).toFixed(2) + " AZN";
           }
         });
       });
