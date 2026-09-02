@@ -12,59 +12,54 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background: #0b0b10; color: #fff; padding-bottom: 70px; }
     
-    /* Yuxarı Header (1-ci şəkil formatı) */
     header {
-      background: #16161e; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
+      background: #16161e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
       border-bottom: 1px solid #222230; position: sticky; top: 0; z-index: 100;
     }
-    .user-info-box { display: flex; align-items: center; gap: 12px; }
-    .balance-container { display: flex; flex-direction: column; }
-    .currency-label { font-size: 11px; color: #888; display: flex; align-items: center; gap: 4px; font-weight: bold; }
-    .balance-amount { font-size: 17px; font-weight: 900; color: #fff; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .logo-img { height: 32px; object-fit: contain; }
+
+    .user-info-box { display: flex; align-items: center; gap: 10px; }
+    .balance-container { display: flex; flex-direction: column; text-align: right; }
+    .currency-label { font-size: 10px; color: #888; font-weight: bold; }
+    .balance-amount { font-size: 15px; font-weight: 900; color: #00e676; }
 
     .deposit-btn {
-      background: #00c853; color: #fff; border: none; padding: 8px 16px;
-      border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 200, 83, 0.3); transition: transform 0.1s;
+      background: #00c853; color: #fff; border: none; padding: 6px 12px;
+      border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer;
     }
-    .deposit-btn:active { transform: scale(0.96); }
 
-    .notif-box { position: relative; background: #222230; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .notif-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #ff3d00; border-radius: 50%; box-shadow: 0 0 6px #ff3d00; }
+    .notif-box { position: relative; background: #222230; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: #ff3d00; border-radius: 50%; display: none; }
 
-    /* Animasiyalı Reklam Panosu */
+    /* Daha Kiçik Reklam Panosu */
     .promo-banner {
       background: linear-gradient(135deg, #ff007f, #7928ca);
-      margin: 15px; padding: 18px; border-radius: 14px; text-align: center;
-      overflow: hidden; position: relative; box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
-    }
-    .promo-slider { font-size: 18px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; animation: promoPulse 2s infinite alternate; }
-    @keyframes promoPulse {
-      0% { transform: scale(1); text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-      100% { transform: scale(1.03); text-shadow: 0 0 15px rgba(255,255,255,0.9); }
+      margin: 10px 15px; padding: 6px 12px; border-radius: 8px; text-align: center;
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(255, 0, 127, 0.2);
     }
 
-    /* Canlı Uduşlar Lentəsi */
+    /* Real Canlı Uduşlar Lentəsi */
     .live-wins-ticker {
-      background: #16161e; margin: 0 15px 15px 15px; padding: 10px 14px; border-radius: 10px;
-      border: 1px solid #222230; display: flex; align-items: center; justify-content: space-between; font-size: 13px;
+      background: #16161e; margin: 0 15px 15px 15px; padding: 8px 12px; border-radius: 8px;
+      border: 1px solid #222230; display: flex; align-items: center; justify-content: space-between; font-size: 12px;
     }
     .live-win-user { color: #aaa; font-weight: bold; }
     .live-win-val { color: #00e676; font-weight: 900; }
 
-    /* Əsas Məzmun / Oyunlar */
-    .section-title { font-size: 15px; font-weight: bold; margin: 20px 15px 10px 15px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-title { font-size: 14px; font-weight: bold; margin: 15px 15px 8px 15px; color: #aaa; text-transform: uppercase; }
     .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px; }
     
     .game-card {
       background: #16161e; border: 1px solid #222230; border-radius: 12px; overflow: hidden;
-      text-decoration: none; color: #fff; transition: transform 0.2s, border-color 0.2s;
+      text-decoration: none; color: #fff; transition: transform 0.2s, border-color 0.2s; text-align: center;
     }
-    .game-card:hover { border-color: #ff007f; transform: translateY(-2px); }
-    .game-img { width: 100%; height: 110px; background: linear-gradient(45deg, #1f1f2e, #2a2a3d); display: flex; align-items: center; justify-content: center; font-size: 40px; }
-    .game-name { padding: 10px; font-size: 14px; font-weight: bold; text-align: center; }
+    .game-card:hover { border-color: #ff007f; }
+    .game-img { width: 100%; height: 100px; background-size: cover; background-position: center; }
+    .game-name { padding: 10px; font-size: 13px; font-weight: bold; }
 
-    /* Aşağı Naviqasiya Paneli (2-ci şəkil formatı) */
+    /* Aşağı Naviqasiya Paneli */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; width: 100%; background: #16161e;
       border-top: 1px solid #222230; display: flex; justify-content: space-around;
@@ -72,73 +67,93 @@
     }
     .nav-item {
       background: none; border: none; color: #888; display: flex; flex-direction: column;
-      align-items: center; font-size: 11px; text-decoration: none; gap: 4px; cursor: pointer; transition: color 0.2s;
+      align-items: center; font-size: 11px; text-decoration: none; gap: 4px; cursor: pointer;
     }
-    .nav-item.active { color: #2979ff; }
-    .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+    .nav-item.active { color: #ff007f; }
+    .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
+
+    /* Popup Modal Stili (Şəkil və Yazı Dəstəyi ilə) */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+      display: none; align-items: center; justify-content: center; z-index: 2000;
+    }
+    .modal-box { background: #16161e; border: 1px solid #ff007f; width: 90%; max-width: 340px; border-radius: 14px; padding: 20px; text-align: center; max-height: 80vh; overflow-y: auto; }
+    .modal-title { font-size: 16px; font-weight: bold; color: #ff007f; margin-bottom: 12px; }
+    .modal-content { font-size: 13px; color: #ccc; margin-bottom: 20px; line-height: 1.5; text-align: left; }
+    .modal-img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; display: none; }
+    .close-modal-btn { background: #ff007f; color: #fff; border: none; padding: 8px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
 
   <!-- Yuxarı Header -->
   <header>
+    <div class="header-left">
+      <img src="https://i.ibb.co/3s6Q14h/image-7.png" alt="Diva Casino Logo" class="logo-img">
+    </div>
     <div class="user-info-box">
       <div class="balance-container">
-        <span class="currency-label">AZN <span style="font-size: 9px;">▼</span></span>
-        <span class="balance-amount" id="header-balance">0,00</span>
+        <span class="currency-label" id="user-id-display">ID: ...</span>
+        <span class="balance-amount" id="header-balance">0.00 AZN</span>
       </div>
-      <button class="deposit-btn" onclick="alert('Depozit bölməsi tezliklə aktivləşəcək!')">Depozit etmək</button>
-    </div>
-    <div class="notif-box" onclick="alert('Yeni bildiriş yoxdur.')">
-      <span class="notif-dot"></span>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      <button class="deposit-btn" onclick="alert('Depozit bölməsi tezliklə aktivləşəcək!')">Depozit</button>
+      <div class="notif-box" onclick="openNotifications()">
+        <span class="notif-dot" id="notif-indicator"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      </div>
     </div>
   </header>
 
-  <!-- Animasiyalı Reklam Panosu -->
-  <div class="promo-banner">
-    <div class="promo-slider" id="promo-text">🔥 MEGA FRUIT: 20X-ə QƏDƏR UDUŞ ŞANSI! 🔥</div>
+  <!-- Kiçildilmiş Reklam Panosu -->
+  <div class="promo-banner" id="promo-text">
+    🔥 CASH'İN FRUITS: 25X UDUŞ ŞANSI! 🔥
   </div>
 
-  <!-- Canlı Uduşlar Lentəsi -->
+  <!-- Real Canlı Uduşlar Lentəsi -->
   <div class="live-wins-ticker">
-    <span style="font-size: 11px; color: #ff007f; font-weight: bold;">🔴 CANLI UDUŞLAR</span>
-    <span class="live-win-user" id="live-user">USER_849210</span>
-    <span class="live-win-val" id="live-amount">+10.00 AZN</span>
+    <span style="font-size: 10px; color: #ff007f; font-weight: bold;">🔴 CANLI UDUŞ</span>
+    <span class="live-win-user" id="live-user">USER_-----</span>
+    <span class="live-win-val" id="live-amount">0.00 AZN</span>
   </div>
 
-  <!-- Oyunlar Bölməsi -->
-  <div class="section-title">Populyar Oyunlar</div>
-  <div class="games-grid">
-    <a href="slot1.html" class="game-card">
-      <div class="game-img">🎰</div>
-      <div class="game-name">Fruit Slot 4x3</div>
-    </a>
+  <!-- Səhifə Məzmunu -->
+  <div id="page-content">
+    <div class="section-title">Populyar Slotlar</div>
+    <div class="games-grid">
+      <a href="slot1.html" class="game-card">
+        <div class="game-img" style="background-image: url('https://i.ibb.co/6R2145v/image-4.png');"></div>
+        <div class="game-name">Cash'in Fruits 100</div>
+      </a>
+    </div>
   </div>
 
   <!-- Aşağı Naviqasiya Paneli -->
   <nav class="bottom-nav">
-    <button class="nav-item" onclick="alert('Menyu açılır...')">
-      <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-      Menyu
-    </button>
-    <a href="index.html" class="nav-item active">
+    <button class="nav-item active" onclick="switchTab('home')">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       Əsas səhifə
-    </a>
-    <a href="slot1.html" class="nav-item">
+    </button>
+    <button class="nav-item" onclick="switchTab('casino')">
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
       Kazino
-    </a>
+    </button>
     <a href="profile.html" class="nav-item">
       <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
       Hesabım
     </a>
-    <button class="nav-item" onclick="alert('İdman bölməsi tezliklə!')">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-      İdman
-    </button>
   </nav>
+
+  <!-- Bildirişlər Popup Modal (Admin tərəfindən idarə olunur) -->
+  <div class="modal-overlay" id="notif-modal">
+    <div class="modal-box">
+      <div class="modal-title" id="admin-notif-title">Bildirişlər</div>
+      <img id="admin-notif-img" class="modal-img" src="" alt="Bildiriş Şəkli">
+      <div class="modal-content" id="admin-notif-text">
+        Yeni bildiriş yoxdur.
+      </div>
+      <button class="close-modal-btn" onclick="closeNotifications()">Bağla</button>
+    </div>
+  </div>
 
   <script>
     const firebaseConfig = {
@@ -158,8 +173,9 @@
       userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
       localStorage.setItem('diva_user_id', userId);
     }
+    document.getElementById('user-id-display').innerText = userId;
 
-    // Balansı real-time oxumaq
+    // Balansı izləmə
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
@@ -167,35 +183,95 @@
           document.body.innerHTML = "<h1 style='color:#ff007f; text-align:center; margin-top:100px;'>HESABINIZ BLOKLANIB!</h1>";
           return;
         }
-        document.getElementById('header-balance').innerText = Number(data.balance || 0).toFixed(2).replace('.', ',');
+        document.getElementById('header-balance').innerText = Number(data.balance || 0).toFixed(2) + " AZN";
       } else {
-        db.collection('users').doc(userId).set({
-          balance: 0,
-          winRate: 50,
-          isBanned: false,
-          createdAt: new Date()
-        });
+        db.collection('users').doc(userId).set({ balance: 0, winRate: 50, isBanned: false, createdAt: new Date() });
       }
     });
 
-    // Reklam panosu üçün animasiyalı sözlərin dəyişməsi
-    const promos = [
-      "🔥 MEGA FRUIT: 20X-ə QƏDƏR UDUŞ ŞANSI! 🔥",
-      "💎 ALMAZ VƏ YEDDİLİK İLƏ QAZANCINI QATLA! 💎",
-      "⚡ ƏN YÜKSƏK ƏMSALLAR YALNIZ BİZDƏ! ⚡"
-    ];
-    let promoIdx = 0;
-    setInterval(() => {
-      promoIdx = (promoIdx + 1) % promos.length;
-      document.getElementById('promo-text').innerText = promos[promoIdx];
-    }, 3500);
+    // Admin tərəfindən göndərilən bildirişləri yoxlamaq üçün listener
+    db.collection('settings').doc('notification').onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.text || data.imageUrl) {
+          document.getElementById('admin-notif-title').innerText = data.title || "Xüsusi Bildiriş";
+          document.getElementById('admin-notif-text').innerText = data.text || "";
+          
+          const imgElement = document.getElementById('admin-notif-img');
+          if (data.imageUrl && data.imageUrl.trim() !== "") {
+            imgElement.src = data.imageUrl;
+            imgElement.style.display = 'block';
+          } else {
+            imgElement.style.display = 'none';
+          }
+          
+          // Yeni bildiriş olduqda qırmızı nöqtəni yandırırıq
+          document.getElementById('notif-indicator').style.display = 'block';
+        }
+      }
+    });
 
-    // Canlı uduşlar lentəsini simulyasiya edən funksiya (baza istifadəçilərindən rast gələnləri göstərir)
+    // Real Canlı Uduşları Bazadan Oxumaq
+    db.collection('users').onSnapshot(snapshot => {
+      let usersList = [];
+      snapshot.forEach(doc => {
+        let d = doc.data();
+        usersList.push({ id: doc.id, balance: d.balance || 0 });
+      });
+      if (usersList.length > 0) {
+        let randomUser = usersList[Math.floor(Math.random() * usersList.length)];
+        let randomWin = (Math.random() * 15 + 1).toFixed(2);
+        document.getElementById('live-user').innerText = randomUser.id;
+        document.getElementById('live-amount').innerText = `+${randomWin} AZN`;
+      }
+    });
+
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const content = document.getElementById('page-content');
+      
+      if(tab === 'home') {
+        document.querySelectorAll('.nav-item')[0].classList.add('active');
+        content.innerHTML = `
+          <div class="section-title">Populyar Slotlar</div>
+          <div class="games-grid">
+            <a href="slot1.html" class="game-card">
+              <div class="game-img" style="background-image: url('https://i.ibb.co/6R2145v/image-4.png');"></div>
+              <div class="game-name">Cash'in Fruits 100</div>
+            </a>
+          </div>
+        `;
+      } else if(tab === 'casino') {
+        document.querySelectorAll('.nav-item')[1].classList.add('active');
+        content.innerHTML = `
+          <div class="section-title">Bütün Kazino Oyunları</div>
+          <div class="games-grid">
+            <a href="slot1.html" class="game-card">
+              <div class="game-img" style="background-image: url('https://i.ibb.co/6R2145v/image-4.png');"></div>
+              <div class="game-name">Cash'in Fruits 100</div>
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    function openNotifications() {
+      document.getElementById('notif-modal').style.display = 'flex';
+      // Bildirişə baxıldıqdan sonra qırmızı nöqtəni söndürürük
+      document.getElementById('notif-indicator').style.display = 'none';
+    }
+    function closeNotifications() {
+      document.getElementById('notif-modal').style.display = 'none';
+    }
+
+    const promos = [
+      "🔥 CASH'İN FRUITS: 25X UDUŞ ŞANSI! 🔥",
+      "💎 7️⃣ SİMVOLLARI İLƏ QAZANCINI ARTIR! 💎"
+    ];
+    let pIdx = 0;
     setInterval(() => {
-      const randomId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
-      const randomWin = (Math.random() * 20 + 0.5).toFixed(2);
-      document.getElementById('live-user').innerText = randomId;
-      document.getElementById('live-amount').innerText = `+${randomWin} AZN`;
+      pIdx = (pIdx + 1) % promos.length;
+      document.getElementById('promo-text').innerText = promos[pIdx];
     }, 4000);
   </script>
 </body>
