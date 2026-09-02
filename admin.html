@@ -59,6 +59,15 @@
       font-weight: bold; cursor: pointer; font-size: 12px;
     }
 
+    .rate-control {
+      display: flex; align-items: center; gap: 10px; flex: 1;
+    }
+    .rate-btn {
+      background: #ff007f; color: #fff; border: none; width: 32px; height: 32px;
+      border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer;
+    }
+    .rate-val { font-weight: bold; color: #00e676; min-width: 45px; text-align: center; }
+
     .ban-btn {
       width: 100%; background: #ff0055; color: #fff; border: none; padding: 8px;
       border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 5px;
@@ -91,7 +100,7 @@
   </div>
 
   <script>
-    const ADMIN_PIN = "divapeyser";
+    const ADMIN_PIN = "1234";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
@@ -150,7 +159,7 @@
             <div class="${isBanned ? 'banned-status' : 'active-status'}">
               Status: ${isBanned ? 'BLOKLANIB (BAN)' : 'Aktiv'}
             </div>
-            <div class="user-balance">Balans: ${balance} AZN | Şans: ${winRate}%</div>
+            <div class="user-balance">Balans: ${balance} AZN</div>
             
             <div class="action-row">
               <span class="label-txt">Balans:</span>
@@ -159,9 +168,12 @@
             </div>
 
             <div class="action-row">
-              <span class="label-txt">Şans (%):</span>
-              <input type="number" min="0" max="100" id="rate-${userId}" class="input-field" placeholder="0 - 100 arası (Standart 50)">
-              <button class="save-btn" onclick="updateWinRate('${userId}')">Təyin Et</button>
+              <span class="label-txt">Şans:</span>
+              <div class="rate-control">
+                <button class="rate-btn" onclick="changeRate('${userId}', ${winRate}, -10)">-</button>
+                <span class="rate-val">${winRate}%</span>
+                <button class="rate-btn" onclick="changeRate('${userId}', ${winRate}, 10)">+</button>
+              </div>
             </div>
 
             <button class="${isBanned ? 'unban-btn' : 'ban-btn'}" onclick="toggleBan('${userId}', ${isBanned})">
@@ -188,19 +200,11 @@
       });
     }
 
-    function updateWinRate(userId) {
-      const inputEl = document.getElementById(`rate-${userId}`);
-      const newRate = parseInt(inputEl.value);
+    function changeRate(userId, currentRate, delta) {
+      let newRate = currentRate + delta;
+      newRate = Math.max(0, Math.min(100, newRate)); // 0% ilə 100% arası tənzimləmə
 
-      if (isNaN(newRate) || newRate < 0 || newRate > 100) {
-        alert("0 ilə 100 arasında bir faiz yazın!");
-        return;
-      }
-
-      db.collection('users').doc(userId).update({ winRate: newRate }).then(() => {
-        alert(`Oyunçunun uduş şansı ${newRate}% olaraq təyin edildi!`);
-        inputEl.value = '';
-      });
+      db.collection('users').doc(userId).update({ winRate: newRate });
     }
 
     function toggleBan(userId, currentStatus) {
