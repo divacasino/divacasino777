@@ -23,12 +23,12 @@
     
     .reels-wrapper { display: flex; gap: 4px; height: 240px; overflow: hidden; position: relative; background: #000; border-radius: 8px; }
     .reel { flex: 1; position: relative; }
-    .reel-strip { display: flex; flex-direction: column; width: 100%; transition: transform 3.5s cubic-bezier(0.15, 1, 0.25, 1); }
+    .reel-strip { display: flex; flex-direction: column; width: 100%; transition: transform 4.5s cubic-bezier(0.15, 1, 0.25, 1); }
     .symbol-cell { height: 80px; display: flex; justify-content: center; align-items: center; font-size: 45px; background: #111; border: 1px solid #222; }
     
     /* Uduş Xətləri və Animasiyalar (SVG Overlay) */
     #lines-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
-    .payline { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: drawLine 0.6s forwards ease-out; filter: drop-shadow(0 0 6px currentColor); }
+    .payline { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1500; stroke-dashoffset: 1500; animation: drawLine 0.6s forwards ease-out; filter: drop-shadow(0 0 6px currentColor); }
     
     @keyframes drawLine { to { stroke-dashoffset: 0; } }
     
@@ -36,7 +36,7 @@
     @keyframes pulseSymbol { from { transform: scale(1); } to { transform: scale(1.15); filter: drop-shadow(0 0 10px #ff007f); } }
 
     /* Uduş Yazısı Animasiyası */
-    .win-popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(0, 0, 0, 0.85); border: 2px solid #00e676; color: #00e676; padding: 15px 30px; border-radius: 12px; font-size: 24px; font-weight: 900; text-align: center; z-index: 20; opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .win-popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(0, 0, 0, 0.9); border: 2px solid #00e676; color: #00e676; padding: 15px 30px; border-radius: 12px; font-size: 22px; font-weight: 900; text-align: center; z-index: 20; opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .win-popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
     /* İdarəetmə Paneli */
@@ -82,7 +82,7 @@
     </div>
     
     <div class="win-popup" id="win-message">
-      BÖYÜK UDUŞ!<br><span id="win-amount-txt" style="color: #fff;">0.00 AZN</span>
+      <span id="win-title-txt">QAZANC!</span><br><span id="win-amount-txt" style="color: #fff;">0.00 AZN</span>
     </div>
   </div>
 
@@ -107,7 +107,6 @@
   </nav>
 
   <script>
-    // FİREBASE QURULUMU
     const firebaseConfig = {
       apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
       authDomain: "diva-casino.firebaseapp.com",
@@ -127,10 +126,9 @@
     document.getElementById('user-id-txt').innerText = "ID: " + userId;
 
     let currentBalance = 0;
-    let userWinRate = 25; // Standart yeni istifadəçi üçün sərt/real şans (25%)
+    let userWinRate = 50; 
     let isSpinning = false;
 
-    // Admin Panel üçün aktivlik
     function updateActivity() { 
       db.collection('users').doc(userId).set({ lastActive: Date.now(), currentGame: "Cash'in Fruits 100" }, { merge: true }); 
     }
@@ -142,13 +140,11 @@
         const data = doc.data();
         if (data.isBanned) { document.body.innerHTML = "<h1 style='color:#ff007f;text-align:center;margin-top:100px;'>HESABINIZ BLOKLANIB!</h1>"; }
         currentBalance = parseFloat(data.balance) || 0;
-        // Admin panelindən verilən şans (əgər təyin olunubsa onu götürür, yoxdursa standart 25% tətbiq edir ki tez-tez udmasın)
-        userWinRate = data.winRate !== undefined ? Number(data.winRate) : 25;
+        userWinRate = data.winRate !== undefined ? Number(data.winRate) : 50;
         document.getElementById('header-balance').innerText = currentBalance.toFixed(2) + " AZN";
       }
     });
 
-    // Mərc idarəetməsi (Həm +- həm klaviaturadan yazmaq)
     function adjustBet(amount) {
       if (isSpinning) return;
       let input = document.getElementById('bet-input');
@@ -167,7 +163,7 @@
     }
 
     const symbols = ["🍒", "🍋", "🍊", "🍇", "🍉", "7️⃣"];
-    const multipliers = { "🍒": 2, "🍋": 3, "🍊": 4, "🍇": 5, "🍉": 10, "7️⃣": 50 };
+    const multipliers = { "🍒": 1.5, "🍋": 2, "🍊": 3, "🍇": 5, "🍉": 10, "7️⃣": 25 };
     const lineColors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ff8800", "#ff0088", "#88ff00", "#0088ff"];
     
     const paylines = [
@@ -180,7 +176,7 @@
       [0,2,0,2,0], [2,0,2,0,2]              
     ];
 
-    const stripLength = 35; // Fırlanma animasiyasının uzunluğu və real görünməsi üçün uzadıldı
+    const stripLength = 45; // Daha uzun və həyəcanlı animasiya
     const finalGrid = [[], [], [], [], []];
 
     function initReels() {
@@ -196,7 +192,7 @@
     }
     initReels();
 
-    async function spin() {
+    function spin() {
       if (isSpinning) return;
       let betAmount = parseFloat(document.getElementById('bet-input').value) || 0.20;
       
@@ -207,15 +203,15 @@
       document.getElementById('lines-overlay').innerHTML = "";
       
       let newBalance = currentBalance - betAmount;
-      await db.collection('users').doc(userId).update({ balance: newBalance });
+      db.collection('users').doc(userId).update({ balance: newBalance });
 
-      // Admin panelindən gələn və ya standart təyin olunan şansa görə uduş yoxlanışı (Tez-tez udmasın deyə real ehtimal)
+      // Şans yoxlanışı
       let randomChance = Math.random() * 100;
       const isWinSpin = randomChance <= userWinRate;
       
       generateResultGrid(isWinSpin);
       
-      // Uzun və real slot fırlanma animasiyası
+      // Anında başlayan və uzadılmış fırlanma animasiyası
       for (let c = 0; c < 5; c++) {
         const strip = document.getElementById(`strip-${c}`);
         strip.style.transition = 'none';
@@ -231,16 +227,15 @@
         strip.innerHTML = html;
         
         setTimeout(() => {
-          // Hər çarx bir-birinin ardınca dayanır (Orijinal kazino effekti)
-          strip.style.transition = `transform ${2.0 + (c * 0.4)}s cubic-bezier(0.1, 1, 0.15, 1)`;
+          strip.style.transition = `transform ${3.0 + (c * 0.5)}s cubic-bezier(0.1, 1, 0.15, 1)`;
           const cellHeight = 80;
           strip.style.transform = `translateY(-${stripLength * cellHeight}px)`;
-        }, 50);
+        }, 20);
       }
 
       setTimeout(() => {
         checkWins(newBalance, betAmount);
-      }, 4000); // 4 saniyəlik tam fırlanma effekti
+      }, 5500);
     }
 
     function generateResultGrid(isWinSpin) {
@@ -249,7 +244,7 @@
       if (isWinSpin) {
         let targetLine = paylines[Math.floor(Math.random() * paylines.length)];
         let targetSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-        let winLength = Math.random() > 0.85 ? 5 : (Math.random() > 0.6 ? 4 : 3);
+        let winLength = Math.random() > 0.8 ? 5 : (Math.random() > 0.5 ? 4 : 3);
         
         for (let c = 0; c < 5; c++) {
           for (let r = 0; r < 3; r++) {
@@ -261,7 +256,6 @@
           }
         }
       } else {
-        // Uduzma halı (heç vaxt səhvən ardıcıl xətt yaranmasın deyə müxtəlif simvollar)
         for (let c = 0; c < 5; c++) {
           for (let r = 0; r < 3; r++) {
             finalGrid[c][r] = symbols[(c + r + Math.floor(Math.random()*3)) % symbols.length];
@@ -285,7 +279,7 @@
         }
 
         if (matchCount >= 3) {
-          let lineWin = (betAmount / 20) * multipliers[firstSym] * matchCount;
+          let lineWin = betAmount * multipliers[firstSym] * (matchCount === 5 ? 2.5 : (matchCount === 4 ? 1.5 : 1));
           totalWinAmount += lineWin;
           
           let points = "";
@@ -305,14 +299,29 @@
         }
       });
 
-      if (totalWinAmount > 0) {
+      // Yalnız qoyulan məbləğdən yuxarı uduş olduqda real qazanc sayılır
+      if (totalWinAmount > betAmount) {
         winningCells.forEach(id => {
           let el = document.getElementById(id);
           if(el) el.classList.add('win-pulse');
         });
 
         let popup = document.getElementById('win-message');
-        document.getElementById('win-amount-txt').innerText = `+${totalWinAmount.toFixed(2)} AZN`;
+        let titleTxt = document.getElementById('win-title-txt');
+        let amountTxt = document.getElementById('win-amount-txt');
+        
+        amountTxt.innerText = `+${totalWinAmount.toFixed(2)} AZN`;
+
+        if (totalWinAmount > 50) {
+          titleTxt.innerText = "BÖYÜK UDUŞ!";
+          popup.style.borderColor = "#ff007f";
+          amountTxt.style.color = "#ff007f";
+        } else {
+          titleTxt.innerText = "QAZANC!";
+          popup.style.borderColor = "#00e676";
+          amountTxt.style.color = "#00e676";
+        }
+
         popup.classList.add('show');
 
         setTimeout(() => {
@@ -321,6 +330,7 @@
           resetSpinStatus();
         }, 3000);
       } else {
+        // Ziyanda olanda və ya uduş olmayanda popup çıxmır
         resetSpinStatus();
       }
     }
