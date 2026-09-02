@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diva Casino - Hesabım</title>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: #0b0b10; color: #fff; padding-bottom: 80px; }
+    header { background: #16161e; padding: 15px 20px; text-align: center; border-bottom: 2px solid #ff007f; }
+    .logo { font-size: 20px; font-weight: bold; color: #ff007f; }
+    
+    .container { max-width: 600px; margin: 20px auto; padding: 15px; }
+    .card { background: #16161e; border-radius: 14px; padding: 20px; border: 1px solid #222230; margin-bottom: 15px; }
+    .card-title { font-size: 16px; color: #888; margin-bottom: 15px; text-transform: uppercase; }
+    .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222230; font-size: 14px; }
+    .info-row:last-child { border: none; }
+    .val { color: #ff007f; font-weight: bold; }
+    
+    .deposit-btn {
+      width: 100%; background: #00e676; color: #000; border: none; padding: 14px;
+      border-radius: 10px; font-weight: bold; font-size: 15px; margin-top: 10px; cursor: pointer;
+    }
+
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #16161e; display: flex; justify-content: space-around;
+      padding: 12px 0; border-top: 1px solid #222230;
+    }
+    .nav-link { color: #777; text-decoration: none; font-size: 11px; text-align: center; font-weight: bold; }
+    .nav-link.active { color: #ff007f; }
+    .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">ŞƏXSİ HESAB</div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">İstifadəçi Profilı</div>
+      <div class="info-row">
+        <span>IP Ünvanı:</span>
+        <span class="val" id="ip-val">Yüklənir...</span>
+      </div>
+      <div class="info-row">
+        <span>DIV Balansı:</span>
+        <span class="val" id="balance-val">0 DIV</span>
+      </div>
+      <div class="info-row">
+        <span>Hesab Statusu:</span>
+        <span style="color:#00e676; font-weight:bold;">Aktiv</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Balans Artırılması</div>
+      <p style="font-size:13px; color:#aaa; margin-bottom:10px;">Balansı artırmaq və ya çıxarış etmək üçün Admin ilə əlaqə saxlayın.</p>
+      <button class="deposit-btn" onclick="alert('Adminlə əlaqə saxlayın!')">Balans Yüklə (Admin)</button>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html" class="nav-link">
+      <span class="nav-icon">🎮</span> Oyunlar
+    </a>
+    <a href="profile.html" class="nav-link active">
+      <span class="nav-icon">👤</span> Hesabım
+    </a>
+  </nav>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "SƏNİN_API_KEY",
+      authDomain: "SƏNİN_AUTH_DOMAIN",
+      projectId: "SƏNİN_PROJECT_ID",
+      storageBucket: "SƏNİN_STORAGE_BUCKET",
+      messagingSenderId: "SƏNİN_MESSAGING_ID",
+      appId: "SƏNİN_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('ip-val').innerText = data.ip;
+        const currentIP = data.ip.replaceAll('.', '_');
+        db.collection('users').doc(currentIP).onSnapshot(doc => {
+          if (doc.exists) {
+            document.getElementById('balance-val').innerText = doc.data().balance + " DIV";
+          }
+        });
+      });
+  </script>
+</body>
+</html>
