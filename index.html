@@ -5,91 +5,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diva Casino</title>
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body {
-      background-color: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 { color: #ff007f; text-transform: uppercase; margin-bottom: 5px; }
-    .ip-info { font-size: 12px; color: #888; margin-bottom: 20px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0f0f13; color: #fff; padding-bottom: 70px; }
     
-    /* DIV Balans Sistemi */
-    #div-balance {
-      background: linear-gradient(45deg, #ff007f, #7928ca);
-      display: inline-block;
-      padding: 12px 25px;
-      border-radius: 25px;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4);
-    }
-
-    /* Meyvə Slot Masası */
-    .slot-container {
+    /* Yuxarı Panel (Header) */
+    header {
+      background: #181820;
+      padding: 15px 20px;
       display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-    .reel {
-      width: 80px;
-      height: 80px;
-      background: #222;
-      border: 3px solid #ff007f;
-      border-radius: 12px;
-      font-size: 40px;
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+      border-bottom: 2px solid #ff007f;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 22px; font-weight: bold; color: #ff007f; text-shadow: 0 0 10px rgba(255, 0, 127, 0.5); }
+    
+    /* DIV Balans Container */
+    .balance-box {
+      background: linear-gradient(45deg, #ff007f, #7928ca);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 15px;
+      box-shadow: 0 2px 10px rgba(255, 0, 127, 0.3);
     }
 
-    /* Fırlat Düyməsi */
-    button {
-      background: #00e676;
-      color: #000;
-      border: none;
-      padding: 15px 40px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: 0.2s;
+    /* Oyunlar Bölməsi (Lobby) */
+    .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+    .section-title { font-size: 18px; margin-bottom: 15px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
     }
-    button:disabled { background: #555; cursor: not-allowed; }
-    #message { margin-top: 15px; font-weight: bold; min-height: 24px; }
+    .game-card {
+      background: #1e1e28;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2a2a38;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+      text-align: center;
+      padding: 15px 10px;
+    }
+    .game-card:hover { transform: translateY(-5px); border-color: #ff007f; }
+    .game-icon { font-size: 45px; margin-bottom: 10px; }
+    .game-title { font-size: 14px; font-weight: bold; color: #ddd; }
+
+    /* Alt Naviqasiya (Hesab Menyusu) */
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #181820;
+      display: flex; justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid #2a2a38;
+    }
+    .nav-item { color: #888; text-decoration: none; font-size: 12px; text-align: center; cursor: pointer; }
+    .nav-item.active { color: #ff007f; font-weight: bold; }
+    .nav-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+
+    /* Oyun və Hesab Səhifəsi Modalı */
+    .view-page { display: none; }
+    .view-page.active { display: block; }
+    
+    /* Hesab Pəncərəsi */
+    .profile-card {
+      background: #1e1e28;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      border: 1px solid #2a2a38;
+    }
+    .profile-info { margin-bottom: 12px; font-size: 14px; color: #ccc; }
+    .profile-info span { color: #ff007f; font-weight: bold; }
+    
+    /* Geriyə Düyməsi */
+    .back-btn {
+      background: #2a2a38; color: #fff; border: none; padding: 8px 15px;
+      border-radius: 8px; cursor: pointer; margin-bottom: 15px; font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Diva Casino</h1>
-  <div class="ip-info">IP Ünvanınız: <span id="user-ip">Yüklənir...</span></div>
+  <!-- Header / Balans -->
+  <header>
+    <div class="logo">DIVA CASINO</div>
+    <div class="balance-box"><span id="balance-val">0</span> DIV</div>
+  </header>
 
-  <!-- Balans Div Container -->
-  <div id="div-balance">Balans: <span id="balance-val">0</span> DIV</div>
+  <div class="container">
+    
+    <!-- 1. ƏSAS SƏHİFƏ (LOBBY) -->
+    <div id="page-lobby" class="view-page active">
+      <div class="section-title">Populyar Slot Oyunları</div>
+      <div class="games-grid">
+        
+        <!-- Oyun 1 -->
+        <div class="game-card" onclick="openGame('Meyvə Slotu v1')">
+          <div class="game-icon">🎰</div>
+          <div class="game-title">Meyvə Slotu</div>
+        </div>
 
-  <!-- Slot Oyunu -->
-  <div class="slot-container">
-    <div class="reel" id="reel1">🍇</div>
-    <div class="reel" id="reel2">🍉</div>
-    <div class="reel" id="reel3">🍊</div>
+        <!-- Oyun 2 (Gələcək üçün) -->
+        <div class="game-card" onclick="openGame('VIP Fruit Spin')">
+          <div class="game-icon">🍓</div>
+          <div class="game-title">VIP Fruit Spin</div>
+        </div>
+
+        <!-- Oyun 3 (Gələcək üçün) -->
+        <div class="game-card" onclick="openGame('Mega Cocktail')">
+          <div class="game-icon">🍹</div>
+          <div class="game-title">Mega Cocktail</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 2. OYUN SƏHİFƏSİ (Oyun kliklənəndə bura açılacaq) -->
+    <div id="page-game" class="view-page">
+      <button class="back-btn" onclick="showPage('lobby')">← Lobbiyə Qayıt</button>
+      <h2 id="current-game-title" style="color:#ff007f; margin-bottom:15px;">Oyun</h2>
+      
+      <div style="background:#1e1e28; padding:30px; text-align:center; border-radius:12px; border:1px solid #ff007f;">
+        <p style="color:#aaa; font-size:14px;">[ Bura fırlanma animasiyalı, xətləri görünən real slot mexanizmini yerləşdirəcəyik ]</p>
+      </div>
+    </div>
+
+    <!-- 3. HESAB (PROFILE) SƏHİFƏSİ -->
+    <div id="page-profile" class="view-page">
+      <div class="section-title">Hesab Məlumatları</div>
+      <div class="profile-card">
+        <div class="profile-info">Hesab IP Ünvanı: <span id="user-ip">Yüklənir...</span></div>
+        <div class="profile-info">Cari Balans: <span id="profile-balance">0</span> DIV</div>
+        <div class="profile-info">Status: <span style="color:#00e676;">Aktiv İstifadəçi</span></div>
+      </div>
+    </div>
+
   </div>
 
-  <button id="spin-btn" onclick="spin()" disabled>FIRLAT (10 DIV)</button>
-  <div id="message"></div>
+  <!-- Alt Naviqasiya Menyusu -->
+  <nav>
+    <div class="nav-item active" id="nav-lobby" onclick="showPage('lobby')">
+      <span class="nav-icon">🎮</span> Oyunlar
+    </div>
+    <div class="nav-item" id="nav-profile" onclick="showPage('profile')">
+      <span class="nav-icon">👤</span> Hesabım
+    </div>
+  </nav>
 
   <script>
-    // 1. SƏNİN FIREBASE KONFİQURASİYAN
+    // Firebase Konfiqurasiyası
     const firebaseConfig = {
-      // BURAYA KOPYALADIĞIN KODLARI YAPIŞDIR
       apiKey: "SƏNİN_API_KEY",
       authDomain: "SƏNİN_AUTH_DOMAIN",
       projectId: "SƏNİN_PROJECT_ID",
@@ -101,72 +174,51 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const fruits = ['🍇', '🍉', '🍊', '🍋', '🍌', '🍒'];
     let currentIP = "";
     let currentBalance = 0;
 
-    // 2. IP Ünvanını al və Bazaya Bağlan
+    // IP almaq və Balans Yükləmək
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => {
-        currentIP = data.ip.replaceAll('.', '_'); // Firestore ID üçün nöqtələri dəyişirik
+        currentIP = data.ip.replaceAll('.', '_');
         document.getElementById('user-ip').innerText = data.ip;
         loadUserBalance();
-      })
-      .catch(() => {
-        document.getElementById('message').innerText = "IP xətası baş verdi.";
       });
 
-    // 3. Balansı Firebase-dən Yüklə / Daxil Et
     function loadUserBalance() {
       const userRef = db.collection('users').doc(currentIP);
-
       userRef.onSnapshot(doc => {
         if (doc.exists) {
           currentBalance = doc.data().balance;
         } else {
-          // Yeni istifadəçiyə hədiyyə 100 DIV balans
-          currentBalance = 100;
+          currentBalance = 100; // Başlanğıc hədiyyə balans
           userRef.set({ balance: currentBalance, createdAt: new Date() });
         }
         document.getElementById('balance-val').innerText = currentBalance;
-        document.getElementById('spin-btn').disabled = false;
+        document.getElementById('profile-balance').innerText = currentBalance;
       });
     }
 
-    // 4. Meyvə Slot Oyun Mexanizmi
-    function spin() {
-      if (currentBalance < 10) {
-        document.getElementById('message').innerText = "Kafi balans yoxdur! Adminlə əlaqə saxlayın.";
-        return;
+    // Səhifələrarası Keçid Sistemi
+    function showPage(pageName) {
+      document.querySelectorAll('.view-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      if (pageName === 'lobby') {
+        document.getElementById('page-lobby').classList.add('active');
+        document.getElementById('nav-lobby').classList.add('active');
+      } else if (pageName === 'profile') {
+        document.getElementById('page-profile').classList.add('active');
+        document.getElementById('nav-profile').classList.add('active');
       }
-
-      document.getElementById('spin-btn').disabled = true;
-      currentBalance -= 10;
-      updateBalanceInDB(currentBalance);
-
-      const r1 = fruits[Math.floor(Math.random() * fruits.length)];
-      const r2 = fruits[Math.floor(Math.random() * fruits.length)];
-      const r3 = fruits[Math.floor(Math.random() * fruits.length)];
-
-      document.getElementById('reel1').innerText = r1;
-      document.getElementById('reel2').innerText = r2;
-      document.getElementById('reel3').innerText = r3;
-
-      if (r1 === r2 && r2 === r3) {
-        const winAmount = 100;
-        currentBalance += winAmount;
-        updateBalanceInDB(currentBalance);
-        document.getElementById('message').innerText = `TƏBRİKLƏR! +${winAmount} DIV qazandınız! 🎉`;
-      } else {
-        document.getElementById('message').innerText = "Bəxtinizi bir daha sınayın!";
-      }
-
-      document.getElementById('spin-btn').disabled = false;
     }
 
-    function updateBalanceInDB(newBalance) {
-      db.collection('users').doc(currentIP).update({ balance: newBalance });
+    // Oyuna Daxil Olmaq
+    function openGame(gameName) {
+      document.querySelectorAll('.view-page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-game').classList.add('active');
+      document.getElementById('current-game-title').innerText = gameName;
     }
   </script>
 </body>
