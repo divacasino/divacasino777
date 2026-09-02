@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Classic Fruit Slot - Diva Casino</title>
+  <title>Classic 4x3 Slot - Diva Casino</title>
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -16,28 +16,48 @@
     .back-btn { background: #222230; color: #fff; border: 1px solid #ff007f; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
     .balance-badge { background: linear-gradient(135deg, #ff007f, #7928ca); padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 13px; }
 
-    .slot-container { max-width: 450px; margin: 20px auto; background: #16161e; border-radius: 20px; padding: 20px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
+    .slot-container { max-width: 480px; margin: 20px auto; background: #16161e; border-radius: 20px; padding: 20px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
     .game-title { color: #ff007f; font-size: 20px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
-    .reels-window {
-      background: #000; display: flex; justify-content: space-around; align-items: center;
-      padding: 15px 5px; border-radius: 12px; border: 2px solid #ff007f; position: relative; margin-bottom: 20px; overflow: hidden;
-    }
-    
-    .payline {
-      position: absolute; top: 50%; left: 0; right: 0; height: 4px;
-      background: #00e676; box-shadow: 0 0 10px #00e676; display: none; z-index: 10; transform: translateY(-50%);
+    .reels-grid {
+      background: #000;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #ff007f;
+      position: relative;
+      margin-bottom: 20px;
     }
 
-    .reel {
-      width: 30%; height: 90px; background: #1f1f2e; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-size: 45px;
+    .cell {
+      height: 75px;
+      background: #1f1f2e;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
       border: 1px solid #33334d;
+      transition: background 0.3s;
+    }
+
+    .cell.win-cell {
+      background: #2e7d32;
+      border-color: #00e676;
+      box-shadow: 0 0 10px #00e676;
     }
 
     .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #0b0b10; padding: 10px; border-radius: 12px; }
     .bet-btn { background: #ff007f; color: #fff; border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-    .bet-val { font-weight: bold; font-size: 16px; color: #00e676; }
+    
+    .bet-input {
+      background: #1f1f2e; border: 1px solid #ff007f; color: #00e676;
+      width: 80px; text-align: center; padding: 6px; border-radius: 8px;
+      font-weight: bold; font-size: 16px; outline: none;
+    }
 
     .spin-btn {
       width: 100%; background: linear-gradient(135deg, #ff007f, #7928ca);
@@ -47,7 +67,7 @@
     }
     .spin-btn:disabled { background: #444; box-shadow: none; cursor: not-allowed; }
 
-    .msg-box { margin-top: 15px; min-height: 25px; font-weight: bold; font-size: 15px; }
+    .msg-box { margin-top: 15px; min-height: 45px; font-weight: bold; font-size: 15px; line-height: 1.4; }
   </style>
 </head>
 <body>
@@ -58,19 +78,29 @@
   </header>
 
   <div class="slot-container" id="game-box">
-    <div class="game-title">Classic Fruit Slot</div>
+    <div class="game-title">Fruit Slot 4x3</div>
 
-    <div class="reels-window">
-      <div class="payline" id="payline"></div>
-      <div class="reel" id="reel1">🍒</div>
-      <div class="reel" id="reel2">🍋</div>
-      <div class="reel" id="reel3">🍇</div>
+    <div class="reels-grid">
+      <div class="cell" id="c_0_0">🍒</div>
+      <div class="cell" id="c_0_1">🍋</div>
+      <div class="cell" id="c_0_2">🍇</div>
+      <div class="cell" id="c_0_3">🔔</div>
+      
+      <div class="cell" id="c_1_0">🔔</div>
+      <div class="cell" id="c_1_1">💎</div>
+      <div class="cell" id="c_1_2">7️⃣</div>
+      <div class="cell" id="c_1_3">🍒</div>
+      
+      <div class="cell" id="c_2_0">🍇</div>
+      <div class="cell" id="c_2_1">🍒</div>
+      <div class="cell" id="c_2_2">🍋</div>
+      <div class="cell" id="c_2_3">💎</div>
     </div>
 
     <div class="controls">
-      <button class="bet-btn" onclick="changeBet(-0.20)">-</button>
-      <div>Mərc: <span class="bet-val" id="bet-val">0.20</span> AZN</div>
-      <button class="bet-btn" onclick="changeBet(0.20)">+</button>
+      <button class="bet-btn" onclick="adjustBet(-0.20)">-</button>
+      <div>Mərc: <input type="number" id="bet-input" class="bet-input" value="0.20" step="0.10" onchange="validateBet()"> AZN</div>
+      <button class="bet-btn" onclick="adjustBet(0.20)">+</button>
     </div>
 
     <button class="spin-btn" id="spin-btn" onclick="spin()">FIRLAT 🎰</button>
@@ -93,38 +123,71 @@
     const db = firebase.firestore();
 
     const fruits = ['🍒', '🍋', '🍇', '🔔', '💎', '7️⃣'];
-    let currentBalance = 0;
-    let currentBet = 0.20;
+    const multipliers = {
+      '🍒': 2,
+      '🍋': 3,
+      '🍇': 4,
+      '🔔': 5,
+      '💎': 10,
+      '7️⃣': 20
+    };
 
-    // Sabit İstifadəçi Kodu Oxumaq
+    let currentBalance = 0;
+    let userWinRate = 50; 
+
     let userId = localStorage.getItem('diva_user_id');
     if (!userId) {
       userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
       localStorage.setItem('diva_user_id', userId);
     }
 
-    // Balans və Ban Vəziyyətini Yoxlamaq
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
-        
-        // Ban yoxlanışı
         if (data.isBanned) {
           document.body.innerHTML = "<h1 style='color:#ff007f; margin-top:100px;'>HESABINIZ BLOKLANIB!</h1><p style='margin-top:10px;'>Administratorla əlaqə saxlayın.</p>";
           return;
         }
 
         currentBalance = data.balance || 0;
+        userWinRate = data.winRate !== undefined ? data.winRate : 50;
         document.getElementById('balance-val').innerText = Number(currentBalance).toFixed(2);
+      } else {
+        db.collection('users').doc(userId).set({
+          balance: 0,
+          winRate: 50,
+          isBanned: false,
+          createdAt: new Date()
+        });
       }
     });
 
-    function changeBet(val) {
-      currentBet = Math.max(0.20, Math.round((currentBet + val) * 100) / 100);
-      document.getElementById('bet-val').innerText = currentBet.toFixed(2);
+    function adjustBet(val) {
+      const input = document.getElementById('bet-input');
+      let currentBet = parseFloat(input.value) || 0.20;
+      currentBet = Math.max(0.10, Math.round((currentBet + val) * 100) / 100);
+      input.value = currentBet.toFixed(2);
+    }
+
+    function validateBet() {
+      const input = document.getElementById('bet-input');
+      let val = parseFloat(input.value);
+      if (isNaN(val) || val < 0.10) {
+        input.value = "0.10";
+      }
+    }
+
+    function clearWinEffects() {
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 4; c++) {
+          document.getElementById(`c_${r}_${c}`).classList.remove('win-cell');
+        }
+      }
     }
 
     function spin() {
+      const currentBet = parseFloat(document.getElementById('bet-input').value) || 0.20;
+
       if (currentBalance < currentBet) {
         document.getElementById('msg-box').style.color = "#ff007f";
         document.getElementById('msg-box').innerText = "Kifayət qədər balans yoxdur!";
@@ -136,38 +199,58 @@
 
       const spinBtn = document.getElementById('spin-btn');
       spinBtn.disabled = true;
-      document.getElementById('payline').style.display = 'none';
+      clearWinEffects();
       document.getElementById('msg-box').innerText = "";
 
       let counter = 0;
       const interval = setInterval(() => {
-        document.getElementById('reel1').innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        document.getElementById('reel2').innerText = fruits[Math.floor(Math.random() * fruits.length)];
-        document.getElementById('reel3').innerText = fruits[Math.floor(Math.random() * fruits.length)];
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 4; c++) {
+            document.getElementById(`c_${r}_${c}`).innerText = fruits[Math.floor(Math.random() * fruits.length)];
+          }
+        }
         counter++;
 
-        if (counter > 15) {
+        if (counter > 12) {
           clearInterval(interval);
-          checkWin();
+          checkWin(currentBet);
           spinBtn.disabled = false;
         }
-      }, 100);
+      }, 80);
     }
 
-    function checkWin() {
-      const r1 = document.getElementById('reel1').innerText;
-      const r2 = document.getElementById('reel2').innerText;
-      const r3 = document.getElementById('reel3').innerText;
+    function checkWin(currentBet) {
+      const randomNumber = Math.floor(Math.random() * 100) + 1;
+      const isWinner = randomNumber <= userWinRate;
 
-      if (r1 === r2 && r2 === r3) {
-        const winAmount = currentBet * 5;
+      if (isWinner) {
+        const winRow = Math.floor(Math.random() * 3);
+        const winSymbol = fruits[Math.floor(Math.random() * fruits.length)];
+
+        for (let c = 0; c < 4; c++) {
+          document.getElementById(`c_${winRow}_${c}`).innerText = winSymbol;
+          document.getElementById(`c_${winRow}_${c}`).classList.add('win-cell');
+        }
+
+        const mult = multipliers[winSymbol] || 2;
+        const winAmount = currentBet * mult;
         currentBalance += winAmount;
         db.collection('users').doc(userId).update({ balance: currentBalance });
 
-        document.getElementById('payline').style.display = 'block';
         document.getElementById('msg-box').style.color = "#00e676";
-        document.getElementById('msg-box').innerText = `TƏBRİKLƏR! +${winAmount.toFixed(2)} AZN UDDUZ! 💥`;
+        document.getElementById('msg-box').innerHTML = `🎉 UDDUZ: +${winAmount.toFixed(2)} AZN (${winSymbol} x${mult})<br><span style="color:#fff; font-size:13px;">Hazırkı Balans: ${currentBalance.toFixed(2)} AZN</span>`;
       } else {
+        for (let r = 0; r < 3; r++) {
+          const s1 = document.getElementById(`c_${r}_0`).innerText;
+          const s2 = document.getElementById(`c_${r}_1`).innerText;
+          const s3 = document.getElementById(`c_${r}_2`).innerText;
+          const s4 = document.getElementById(`c_${r}_3`).innerText;
+          
+          if (s1 === s2 && s2 === s3 && s3 === s4) {
+            document.getElementById(`c_${r}_3`).innerText = fruits[(fruits.indexOf(s4) + 1) % fruits.length];
+          }
+        }
+
         document.getElementById('msg-box').style.color = "#aaa";
         document.getElementById('msg-box').innerText = "Bəxtinizi bir daha sınayın!";
       }
