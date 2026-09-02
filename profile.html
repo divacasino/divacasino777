@@ -3,61 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil - Diva Casino</title>
+  <title>Diva Casino - Hesabım</title>
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: #0b0b10; color: #fff; padding-bottom: 30px; text-align: center; }
+    body { background: #0b0b10; color: #fff; padding-bottom: 70px; }
     
-    header { background: #16161e; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff007f; }
-    .back-btn { background: #222230; color: #fff; border: 1px solid #ff007f; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; }
-
-    .profile-container { max-width: 400px; margin: 30px auto; background: #16161e; border-radius: 20px; padding: 25px; border: 2px solid #222230; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
-    
-    .avatar { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #ff007f; margin-bottom: 15px; box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); }
-    .user-id { color: #888; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
-
-    .info-card { background: #0b0b10; border: 1px solid #222230; border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: left; }
-    .info-title { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-    .info-val { font-size: 18px; font-weight: bold; color: #00e676; }
-
-    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-    .status-active { background: rgba(0, 230, 118, 0.2); color: #00e676; border: 1px solid #00e676; }
-    .status-banned { background: rgba(255, 0, 127, 0.2); color: #ff007f; border: 1px solid #ff007f; }
-
-    .action-btn {
-      width: 100%; background: linear-gradient(135deg, #ff007f, #7928ca);
-      color: #fff; border: none; padding: 12px; border-radius: 12px;
-      font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; margin-top: 20px;
+    header {
+      background: #16161e; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #222230; position: sticky; top: 0; z-index: 100;
     }
+    .logo-img { height: 32px; object-fit: contain; }
+    .header-title { font-size: 15px; font-weight: bold; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .profile-container { padding: 15px; max-width: 500px; margin: 0 auto; }
+
+    /* Profil Əsas Kartı */
+    .user-card {
+      background: linear-gradient(135deg, #16161e, #1f1f2e);
+      border: 1px solid #222230; border-radius: 14px; padding: 20px; text-align: center;
+      margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .user-avatar {
+      width: 65px; height: 65px; background: linear-gradient(135deg, #ff007f, #7928ca);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin: 0 auto 10px auto; border: 2px solid #ff007f;
+    }
+    .user-id { font-size: 14px; color: #aaa; font-weight: bold; margin-bottom: 4px; }
+    .user-status { font-size: 11px; background: rgba(0, 230, 118, 0.15); color: #00e676; padding: 3px 10px; border-radius: 20px; display: inline-block; font-weight: bold; }
+
+    /* Balans Blokları */
+    .balance-box-card {
+      background: #16161e; border: 1px solid #222230; border-radius: 12px; padding: 15px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+    }
+    .balance-title { font-size: 12px; color: #888; font-weight: bold; text-transform: uppercase; }
+    .balance-val { font-size: 20px; font-weight: 900; color: #00e676; }
+
+    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .action-btn {
+      padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; border: none; cursor: pointer; text-transform: uppercase; transition: opacity 0.2s;
+    }
+    .btn-deposit { background: #00c853; color: #fff; }
+    .btn-withdraw { background: #ff3d00; color: #fff; }
+    .action-btn:active { opacity: 0.8; }
+
+    /* Menyu Siyahısı Kartları */
+    .menu-card-list { background: #16161e; border: 1px solid #222230; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+    .menu-row {
+      padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #222230; cursor: pointer; font-size: 13px; font-weight: 600; color: #ccc; transition: background 0.2s;
+    }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row:hover { background: #1f1f2e; color: #fff; }
+
+    .logout-btn {
+      width: 100%; background: transparent; border: 1px solid #ff3d00; color: #ff3d00;
+      padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; text-transform: uppercase;
+    }
+    .logout-btn:hover { background: rgba(255, 61, 0, 0.1); }
+
+    /* Aşağı Naviqasiya Paneli */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; width: 100%; background: #16161e;
+      border-top: 1px solid #222230; display: flex; justify-content: space-around;
+      padding: 8px 0; z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: #888; display: flex; flex-direction: column;
+      align-items: center; font-size: 11px; text-decoration: none; gap: 4px; cursor: pointer;
+    }
+    .nav-item.active { color: #ff007f; }
+    .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
   </style>
 </head>
 <body>
 
   <header>
-    <a href="index.html" class="back-btn">← Lobby</a>
-    <div style="font-weight: bold; color: #ff007f;">ŞƏXSİ HESAB</div>
+    <img src="https://i.ibb.co/3s6Q14h/image-7.png" alt="Diva Casino Logo" class="logo-img">
+    <div class="header-title">Hesabım</div>
+    <div style="width: 32px;"></div>
   </header>
 
   <div class="profile-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar" class="avatar">
-    <div class="user-id" id="display-id">ID: Yüklənir...</div>
-
-    <div class="info-card">
-      <div class="info-title">Ümumi Balans</div>
-      <div class="info-val" id="display-balance">0.00 AZN</div>
+    
+    <!-- Profil Məlumatı -->
+    <div class="user-card">
+      <div class="user-avatar">👤</div>
+      <div class="user-id" id="profile-user-id">ID: ...</div>
+      <div class="user-status">● Hesab Aktivdir</div>
     </div>
 
-    <div class="info-card">
-      <div class="info-title">Hesab Statusu</div>
-      <div id="display-status"><span class="status-badge status-active">Aktiv</span></div>
+    <!-- Balans Kartı -->
+    <div class="balance-box-card">
+      <div>
+        <div class="balance-title">Cari Balans</div>
+        <div style="font-size: 11px; color: #777;">Əsas Hesab</div>
+      </div>
+      <div class="balance-val" id="profile-balance">0.00 AZN</div>
     </div>
 
-    <a href="index.html" class="action-btn">Oyunlara Qayıt</a>
+    <!-- Sürətli Əməliyyatlar -->
+    <div class="action-buttons">
+      <button class="action-btn btn-deposit" onclick="alert('Depozit bölməsi tezliklə aktivləşəcək!')">Depozit Et</button>
+      <button class="action-btn btn-withdraw" onclick="alert('Çıxarış üçün minimum balans tələbi ödənməlidir.')">Çıxarış</button>
+    </div>
+
+    <!-- Rəsmi Menyu Siyahısı -->
+    <div class="menu-card-list">
+      <div class="menu-row" onclick="alert('Oyun tarixçəsi boşdur.')">
+        <span>🕒 Oyun Tarixçəsi</span>
+        <span>›</span>
+      </div>
+      <div class="menu-row" onclick="alert('Bütün bonuslar artıq balansınıza əlavə olunub.')">
+        <span>🎁 Bonuslar və Aksiyalar</span>
+        <span>›</span>
+      </div>
+      <div class="menu-row" onclick="alert('Təhlükəsizlik səviyyəsi: Yüksək')">
+        <span>🛡️ Təhlükəsizlik və Şifrə</span>
+        <span>›</span>
+      </div>
+      <div class="menu-row" onclick="alert('Dəstək xidməti: support@divacasino.com')">
+        <span>🎧 Dəstək Xidməti (Support)</span>
+        <span>›</span>
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="resetAccount()">Hesabdan Çıx / Sıfırla</button>
+
   </div>
+
+  <!-- Aşağı Naviqasiya Paneli -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Əsas səhifə
+    </a>
+    <a href="index.html" class="nav-item" onclick="localStorage.setItem('open_casino', 'true')">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      Kazino
+    </a>
+    <a href="profile.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      Hesabım
+    </a>
+  </nav>
 
   <script>
     const firebaseConfig = {
@@ -66,8 +159,7 @@
       projectId: "diva-casino",
       storageBucket: "diva-casino.firebasestorage.app",
       messagingSenderId: "406269257311",
-      appId: "1:406269257311:web:ef51aa13ccdcd73fff9dea",
-      measurementId: "G-867WKS9NH7"
+      appId: "1:406269257311:web:ef51aa13ccdcd73fff9dea"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -78,36 +170,28 @@
       userId = 'USER_' + Math.floor(100000 + Math.random() * 900000);
       localStorage.setItem('diva_user_id', userId);
     }
+    document.getElementById('profile-user-id').innerText = "ID: " + userId;
 
-    document.getElementById('display-id').innerText = "ID: " + userId;
-
+    // Balansı real-time oxumaq
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
         const data = doc.data();
-        
         if (data.isBanned) {
-          document.body.innerHTML = "<h1 style='color:#ff007f; margin-top:100px;'>HESABINIZ BLOKLANIB!</h1><p style='margin-top:10px;'>Administratorla əlaqə saxlayın.</p>";
+          document.body.innerHTML = "<h1 style='color:#ff007f; text-align:center; margin-top:100px;'>HESABINIZ BLOKLANIB!</h1>";
           return;
         }
-
-        const balance = Number(data.balance || 0).toFixed(2);
-        document.getElementById('display-balance').innerText = balance + " AZN";
-        
-        const statusEl = document.getElementById('display-status');
-        if (data.isBanned) {
-          statusEl.innerHTML = '<span class="status-badge status-banned">Bloklanıb</span>';
-        } else {
-          statusEl.innerHTML = '<span class="status-badge status-active">Aktiv</span>';
-        }
+        document.getElementById('profile-balance').innerText = Number(data.balance || 0).toFixed(2) + " AZN";
       } else {
-        db.collection('users').doc(userId).set({
-          balance: 0,
-          winRate: 50,
-          isBanned: false,
-          createdAt: new Date()
-        });
+        db.collection('users').doc(userId).set({ balance: 0, winRate: 50, isBanned: false, createdAt: new Date() });
       }
     });
+
+    function resetAccount() {
+      if(confirm("Yeni hesab yaratmaq istədiyinizdən əminsiniz?")) {
+        localStorage.removeItem('diva_user_id');
+        location.reload();
+      }
+    }
   </script>
 </body>
 </html>
