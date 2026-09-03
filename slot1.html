@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Cash'in Fruits 100 - Diva Casino</title>
 
-  <!-- PWA & Apple Meta -->
   <link rel="icon" type="image/png" href="logo.png.PNG">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -18,136 +16,178 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
     
     body { 
-      background-color: #07070a; 
+      background-color: #0b0b10; 
       color: #ffffff; 
       padding-bottom: 30px; 
       overflow-x: hidden; 
     }
 
-    /* Header */
-    header { background: #16161e; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222230; position: sticky; top: 0; z-index: 1000; height: 55px; }
-    .back-btn { background: #222230; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
-    .user-panel { display: flex; align-items: center; gap: 10px; }
-    .balance-box { text-align: right; }
-    .user-id-txt { font-size: 10px; color: #8888a0; font-weight: 700; }
-    .user-bal-txt { font-size: 14px; font-weight: 900; color: #00e676; }
+    /* Üst Panel (Header - image_12.png) */
+    header { background: #16161e; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222230; position: sticky; top: 0; z-index: 1000; height: 60px; }
+    .back-btn { background: #2f2f3d; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: 0.1s; }
+    .back-btn:active { transform: scale(0.95); }
+    .user-panel { text-align: right; }
+    .user-id-txt { font-size: 11px; color: #8888a0; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .user-bal-txt { font-size: 16px; font-weight: 900; color: #69f0ae; }
 
-    .container { padding: 12px; max-width: 500px; margin: 0 auto; display: flex; flexDirection: column; gap: 12px; }
+    /* Ana Konteyner (Səliqəli alt-alta düzülüş) */
+    .container { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 15px; 
+      padding: 15px; 
+      max-width: 450px; 
+      margin: 0 auto; 
+    }
 
-    /* Oyun Başlığı (Jackpot / Üst Banner) */
+    /* Oyun Başlığı */
     .slot-top-banner {
-      background: linear-gradient(90deg, #1a0505, #3d0a0a, #1a0505);
-      border: 1px solid #ff3d0055;
-      border-radius: 8px;
-      padding: 6px;
+      background: linear-gradient(90deg, #3d0a0a, #7a1515, #3d0a0a);
+      border: 1px solid #ff4500;
+      border-radius: 10px;
+      padding: 10px;
       text-align: center;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 900;
-      color: #ff9100;
-      letter-spacing: 1px;
+      color: #ffcc00;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      box-shadow: inset 0 0 10px rgba(255, 61, 0, 0.2);
+      box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
     }
 
-    /* Slot Grid - Közərən Arxa Fon və Sütunlar */
+    /* Slot Ekranı (Közərən Narıncı Fon) */
     .slot-machine {
-      background: #0f0202;
-      border: 2px solid #ff007f;
-      border-radius: 12px;
+      background: linear-gradient(180deg, #1f0500 0%, #4a0d00 50%, #1f0500 100%);
+      border: 3px solid #ff2a00;
+      border-radius: 14px;
       padding: 8px;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.3), inset 0 0 30px rgba(0,0,0,0.8);
+      box-shadow: 0 0 25px rgba(255, 42, 0, 0.4), inset 0 0 40px rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: space-between;
+      height: 220px; /* 3 sıra simvol üçün */
+      position: relative;
+      overflow: hidden;
     }
 
-    .slot-grid { 
-      display: grid; 
-      grid-template-columns: repeat(5, 1fr); 
-      gap: 4px; 
-      background: linear-gradient(180deg, #1f0505 0%, #3a0808 50%, #1f0505 100%);
-      border-radius: 8px; 
-      padding: 6px;
-      box-shadow: inset 0 0 15px rgba(255, 69, 0, 0.4);
+    /* Şaquli Sütunlar (Reels) */
+    .reel-container {
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+    }
+
+    /* Simvolların Sürüşən Zolağı */
+    .reel-strip {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      /* Transform JavaScript tərəfindən idarə olunacaq */
+    }
+
+    /* Tək Simvol */
+    .symbol {
+      height: 68px; /* Ümumi hündürlük = 3 * 68 = 204px (~220px içində mərkəzləşir) */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
     }
     
-    .slot-cell { 
-      background: rgba(12, 12, 18, 0.85); 
-      border: 1px solid rgba(255, 255, 255, 0.08); 
-      border-radius: 6px; 
-      aspect-ratio: 1/1; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 28px; 
-      transition: transform 0.1s ease;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
-    }
+    /* Qazanan Simvol Efekti */
+    .symbol.winner { animation: winPulse 0.6s infinite alternate; }
+    @keyframes winPulse { from { transform: scale(1); filter: brightness(1); } to { transform: scale(1.15); filter: brightness(1.4); } }
 
-    .slot-cell.winner {
-      border-color: #00e676;
-      background: rgba(0, 230, 118, 0.15);
-      box-shadow: 0 0 12px #00e676;
+    /* Lazer Şaquli Xətlər */
+    .laser-line {
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, #ffcc00, #ff4500, #ffcc00, transparent);
+      box-shadow: 0 0 8px #ff4500, 0 0 15px #ffcc00;
+      border-radius: 2px;
+      z-index: 2;
     }
 
     /* Mərc Paneli */
     .bet-panel {
       background: #16161e;
       border: 1px solid #222230;
-      border-radius: 10px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
-
-    .bet-label { font-size: 10px; font-weight: 800; color: #8888a0; text-align: center; letter-spacing: 0.5px; }
-    
-    .bet-controls { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-    
-    .bet-btn { background: #222230; color: #fff; border: none; width: 40px; height: 38px; border-radius: 8px; font-size: 18px; font-weight: 900; cursor: pointer; transition: 0.1s; }
-    .bet-btn:active { transform: scale(0.92); background: #333346; }
-
-    .bet-display { background: #0b0b10; border: 1px solid #2f2f42; border-radius: 8px; flex: 1; text-align: center; font-size: 16px; font-weight: 900; color: #00e676; padding: 8px; }
+    .bet-label { font-size: 11px; font-weight: 900; color: #8888a0; text-align: center; letter-spacing: 0.5px; }
+    .bet-controls { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .bet-btn { background: #2f2f3d; color: #fff; border: none; width: 45px; height: 45px; border-radius: 10px; font-size: 22px; font-weight: 900; cursor: pointer; transition: 0.1s; }
+    .bet-btn:active { transform: scale(0.90); background: #454559; }
+    .bet-display { background: #0b0b10; border: 1px solid #3a3a4d; border-radius: 10px; flex: 1; text-align: center; height: 45px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #69f0ae; }
 
     /* Fırlat Düyməsi */
     .spin-btn { 
-      background: linear-gradient(180deg, #00e676 0%, #00c853 100%); 
-      color: #07070a; 
+      background: linear-gradient(180deg, #00e676 0%, #00b25c 100%); 
+      color: #000; 
       border: none; 
       width: 100%; 
-      padding: 14px; 
-      border-radius: 10px; 
-      font-size: 16px; 
-      font-weight: 950; 
+      padding: 16px; 
+      border-radius: 12px; 
+      font-size: 18px; 
+      font-weight: 900; 
       cursor: pointer; 
       text-transform: uppercase;
       letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+      box-shadow: 0 5px 20px rgba(0, 230, 118, 0.4);
       transition: 0.15s;
     }
-    .spin-btn:active { transform: scale(0.97); opacity: 0.9; }
-    .spin-btn:disabled { background: #333; color: #777; box-shadow: none; cursor: not-allowed; }
+    .spin-btn:active { transform: scale(0.96); opacity: 0.9; }
+    .spin-btn:disabled { background: #333; color: #666; box-shadow: none; pointer-events: none; }
 
-    /* Qazanc Bildirişi */
-    .win-popup {
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%) scale(0.5);
-      background: rgba(0, 230, 118, 0.95);
-      color: #07070a;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 20px;
-      font-weight: 950;
-      box-shadow: 0 5px 25px rgba(0,230,118,0.6);
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Qazanc Animasiyaları */
+    .win-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
     }
-    .win-popup.show {
-      transform: translateX(-50%) scale(1);
-      opacity: 1;
+    .win-overlay.show { opacity: 1; pointer-events: auto; }
+
+    /* Normal Qəşəng Animasiya (2 saniyəlik) */
+    .nice-win-box {
+      display: none;
+      background: linear-gradient(135deg, #ff9100, #ffea00);
+      padding: 20px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(255, 145, 0, 0.6);
+      transform: scale(0.5);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+    .win-overlay.show-nice .nice-win-box { display: block; transform: scale(1); }
+    .nice-win-box h2 { color: #000; font-size: 24px; font-weight: 900; margin-bottom: 5px; }
+    .nice-win-box .amount { color: #000; font-size: 30px; font-weight: 900; }
+
+    /* BIG WIN Animasiyası */
+    .big-win-box {
+      display: none;
+      text-align: center;
+      animation: bigWinTremble 0.1s infinite alternate;
+    }
+    .win-overlay.show-big .big-win-box { display: block; }
+    .big-win-box h1 {
+      font-size: 55px; font-weight: 900; margin: 0;
+      background: linear-gradient(to bottom, #ffea00, #ff3d00, #d500f9);
+      -webkit-background-clip: text; color: transparent;
+      text-shadow: 0 0 20px rgba(255, 234, 0, 0.8), 0 0 40px rgba(255, 61, 0, 0.8);
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+    .big-win-box .amount { font-size: 45px; color: #69f0ae; font-weight: 900; text-shadow: 0 0 20px #00e676; margin-top: 10px; }
+    @keyframes bigWinTremble { from { transform: scale(1) rotate(-2deg); } to { transform: scale(1.05) rotate(2deg); } }
   </style>
 </head>
 <body>
@@ -155,28 +195,29 @@
   <header>
     <a href="index.html" class="back-btn">⬅ Geri</a>
     <div class="user-panel">
-      <div class="balance-box">
-        <div class="user-id-txt">ID: <span id="display-user-id">----</span></div>
-        <div class="user-bal-txt" id="display-user-balance">0.00 AZN</div>
-      </div>
+      <div class="user-id-txt">ID: <span id="display-user-id">----</span></div>
+      <div class="user-bal-txt" id="display-user-balance">0.00 AZN</div>
     </div>
   </header>
 
   <div class="container">
     
-    <!-- Üst Kazino Başlığı -->
-    <div class="slot-top-banner">
-      🔥 CASH'IN FRUITS 100 - HOT SEVENS EDITION 🔥
-    </div>
+    <div class="slot-top-banner">🔥 CASH'IN FRUITS 100 - HOT SEVENS 🔥</div>
 
-    <!-- Slot Ekranı (Közərən Sütunlar) -->
+    <!-- Kazino Maşını -->
     <div class="slot-machine">
-      <div class="slot-grid" id="slot-grid">
-        <!-- 15 Xana (5 sütun x 3 sətir) JavaScript ilə doldurulacaq -->
-      </div>
+      <div class="reel-container"><div class="reel-strip" id="reel-0"></div></div>
+      <div class="laser-line"></div>
+      <div class="reel-container"><div class="reel-strip" id="reel-1"></div></div>
+      <div class="laser-line"></div>
+      <div class="reel-container"><div class="reel-strip" id="reel-2"></div></div>
+      <div class="laser-line"></div>
+      <div class="reel-container"><div class="reel-strip" id="reel-3"></div></div>
+      <div class="laser-line"></div>
+      <div class="reel-container"><div class="reel-strip" id="reel-4"></div></div>
     </div>
 
-    <!-- Mərc İdarəetmə Paneli -->
+    <!-- Mərc Paneli -->
     <div class="bet-panel">
       <div class="bet-label">MƏRC MƏBLƏĞİ (AZN)</div>
       <div class="bet-controls">
@@ -186,16 +227,22 @@
       </div>
     </div>
 
-    <!-- Fırlat Düyməsi -->
-    <button class="spin-btn" id="spin-button" onclick="spinSlot()">Fırlat</button>
-
+    <button class="spin-btn" id="spin-button" onclick="startSpin()">FIRLAT</button>
   </div>
 
-  <!-- Qazanc Popup Elementi -->
-  <div class="win-popup" id="win-popup">TƏBRİKLƏR! +<span id="win-amount-txt">0.00</span> AZN</div>
+  <!-- Qazanc Ekranı (Popuplar) -->
+  <div class="win-overlay" id="win-overlay">
+    <div class="nice-win-box" id="nice-win">
+      <h2>TƏBRİKLƏR!</h2>
+      <div class="amount">+<span id="nice-win-val">0.00</span> AZN</div>
+    </div>
+    <div class="big-win-box" id="big-win">
+      <h1>BIG<br>WIN!</h1>
+      <div class="amount">+<span id="big-win-val">0.00</span> AZN</div>
+    </div>
+  </div>
 
   <script>
-    // Firebase Konfiqurasiyası
     const firebaseConfig = {
       apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
       authDomain: "diva-casino.firebaseapp.com",
@@ -212,21 +259,12 @@
 
     let userBalance = 0;
     let currentBet = 0.20;
-
-    // Meyvələr və simvollar (Emoji və ya Şəkil olaraq)
     const symbols = ['🍉', '🍋', '🍊', '🍒', '7️⃣'];
+    const SYMBOL_HEIGHT = 68; // px
+    const VISIBLE_ROWS = 3;
+    const SPIN_SYMBOLS_COUNT = 25; // Hər fırlanmada neçə simvol sürüşəcək
 
-    // Gridin ilkin yaradılması (15 xana)
-    const gridEl = document.getElementById('slot-grid');
-    for (let i = 0; i < 15; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'slot-cell';
-      cell.id = `cell-${i}`;
-      cell.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-      gridEl.appendChild(cell);
-    }
-
-    // Balansı Firebase-dən oxumaq
+    // Balansı dinlə
     db.collection('users').doc(userId).onSnapshot(doc => {
       if (doc.exists) {
         userBalance = doc.data().balance || 0;
@@ -239,76 +277,132 @@
       document.getElementById('bet-amount').innerText = currentBet.toFixed(2);
     }
 
-    async function spinSlot() {
+    function getRandomSymbol() {
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    // Başlanğıc üçün slotları doldurmaq
+    const reelsData = [[], [], [], [], []];
+    for(let col = 0; col < 5; col++) {
+      for(let row = 0; row < VISIBLE_ROWS; row++) reelsData[col].push(getRandomSymbol());
+      updateReelDOM(col, reelsData[col]);
+    }
+
+    function updateReelDOM(colIndex, symbolArray) {
+      const reelEl = document.getElementById(`reel-${colIndex}`);
+      reelEl.innerHTML = symbolArray.map((sym, idx) => `<div class="symbol" id="sym-${colIndex}-${idx}">${sym}</div>`).join('');
+    }
+
+    async function startSpin() {
       if (userBalance < currentBet) {
-        alert("Balansınızda kifayət qədər vəsatət yoxdur! Zəhmət olmasa depozit edin.");
+        alert("Balansınızda kifayət qədər vəsatət yoxdur!");
         return;
       }
 
       const spinBtn = document.getElementById('spin-button');
       spinBtn.disabled = true;
 
-      // Balansdan mərcin çıxılması
+      // Balansdan çıx
       userBalance -= currentBet;
-      await db.collection('users').doc(userId).update({ balance: userBalance, currentGame: "Cash'in Fruits 100" });
+      await db.collection('users').doc(userId).update({ balance: userBalance, currentGame: "Cash'in Fruits" });
 
-      // Köhnə qazanc işarələrini təmizlə
-      for (let i = 0; i < 15; i++) {
-        document.getElementById(`cell-${i}`).classList.remove('winner');
+      const spinPromises = [];
+      const finalGrid = [[], [], [], [], []];
+
+      // Hər sütun üçün sürüşmə məntiqi
+      for (let col = 0; col < 5; col++) {
+        // Mövcud ekrandakı 3 simvolu götür
+        const currentVisible = reelsData[col].slice(-3);
+        
+        // Yeni nəticə üçün 3 simvol yarat
+        const newResult = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+        finalGrid[col] = newResult;
+
+        // Aralıq (fırlanarkən görünəcək) təsadüfi simvollar
+        const strip = [...currentVisible];
+        for(let i=0; i < SPIN_SYMBOLS_COUNT - 6; i++) strip.push(getRandomSymbol());
+        strip.push(...newResult);
+
+        // Zolağı DOM-a yaz və yuxarı qaldır (transform = 0)
+        const reelEl = document.getElementById(`reel-${col}`);
+        reelEl.style.transition = 'none';
+        reelEl.style.transform = 'translateY(0px)';
+        reelEl.innerHTML = strip.map(sym => `<div class="symbol">${sym}</div>`).join('');
+
+        // Brauzeri yeniləməyə məcbur et
+        void reelEl.offsetWidth;
+
+        // Aşağı doğru sürüşmə animasiyası (Hər sütun bir az gec dayanır)
+        const duration = 1.5 + (col * 0.3); // Sütun 1 = 1.5s, Sütun 5 = 2.7s
+        reelEl.style.transition = `transform ${duration}s cubic-bezier(0.1, 0.7, 0.1, 1)`;
+        
+        // Nə qədər aşağı düşəcək? (Tam uzunluqdan son 3 dənəni saxla)
+        const dropDistance = (SPIN_SYMBOLS_COUNT - VISIBLE_ROWS) * SYMBOL_HEIGHT;
+        reelEl.style.transform = `translateY(-${dropDistance}px)`;
+
+        // Yaddaşda yalnız son nəticəni saxla
+        reelsData[col] = newResult;
+
+        // Promise ilə sonuncu sütunun dayanmasını gözləyək
+        spinPromises.push(new Promise(resolve => setTimeout(resolve, duration * 1000)));
       }
 
-      // Fırlanma animasiyası (təsadüfi simvolların sürətli dəyişməsi)
-      let counter = 0;
-      const spinInterval = setInterval(() => {
-        for (let i = 0; i < 15; i++) {
-          document.getElementById(`cell-${i}`).innerText = symbols[Math.floor(Math.random() * symbols.length)];
-        }
-        counter++;
-        if (counter > 12) {
-          clearInterval(spinInterval);
-          finalizeSpin();
-        }
-      }, 80);
+      await Promise.all(spinPromises);
+      calculateWin(finalGrid);
     }
 
-    async function finalizeSpin() {
-      // Son nəticənin formalaşdırılması
-      const finalSymbols = [];
-      for (let i = 0; i < 15; i++) {
-        const sym = symbols[Math.floor(Math.random() * symbols.length)];
-        finalSymbols.push(sym);
-        document.getElementById(`cell-${i}`).innerText = sym;
-      }
+    async function calculateWin(grid) {
+      let totalWin = 0;
+      let winningSymbolsCount = {};
 
-      // Sadə qazanc yoxlaması (Məsələn, eyni simvoldan 3 və ya daha çox düşərsə)
-      let winMultiplier = 0;
-      
-      // Sadə alqoritm: hər hansı simvol sayına baxaq
-      const counts = {};
-      finalSymbols.forEach(s => counts[s] = (counts[s] || 0) + 1);
+      // Qazanc alqoritmi (Bütün xanalardakı eyni simvolları sayır)
+      grid.forEach(col => {
+        col.forEach(sym => {
+          winningSymbolsCount[sym] = (winningSymbolsCount[sym] || 0) + 1;
+        });
+      });
 
-      for (let sym in counts) {
-        if (counts[sym] >= 3) {
-          winMultiplier = counts[sym] === 5 ? 10 : (counts[sym] === 4 ? 5 : 2);
-          // Qazanan xanaları işarələyək
-          for (let i = 0; i < 15; i++) {
-            if (finalSymbols[i] === sym) {
-              document.getElementById(`cell-${i}`).classList.add('winner');
-            }
-          }
+      let multiplier = 0;
+      for (let sym in winningSymbolsCount) {
+        if (winningSymbolsCount[sym] >= 3) {
+          if(winningSymbolsCount[sym] >= 6) multiplier += 20; // Super şans
+          else if(winningSymbolsCount[sym] === 5) multiplier += 8;
+          else if(winningSymbolsCount[sym] === 4) multiplier += 3;
+          else multiplier += 1.5;
         }
       }
 
-      if (winMultiplier > 0) {
-        const winAmount = currentBet * winMultiplier;
-        userBalance += winAmount;
+      totalWin = parseFloat((currentBet * multiplier).toFixed(2));
+
+      // Sütunları səliqəyə sal (animasiyadan sonra yalnız 3 xana qalsın)
+      for(let col=0; col<5; col++){
+        updateReelDOM(col, grid[col]);
+        document.getElementById(`reel-${col}`).style.transition = 'none';
+        document.getElementById(`reel-${col}`).style.transform = 'translateY(0px)';
+      }
+
+      if (totalWin > 0) {
+        userBalance += totalWin;
         await db.collection('users').doc(userId).update({ balance: userBalance });
 
-        // Popup göstər
-        document.getElementById('win-amount-txt').innerText = winAmount.toFixed(2);
-        const popup = document.getElementById('win-popup');
-        popup.classList.add('show');
-        setTimeout(() => popup.classList.remove('show'), 2500);
+        // Animasiya qərarı (Məntiqinizə əsasən)
+        const overlay = document.getElementById('win-overlay');
+        
+        if (totalWin <= currentBet) {
+          // Mərcdən az/bərabər udanda - Ekrana heç nə gəlmir, sadəcə gizli artır.
+        } 
+        else if (totalWin > currentBet && totalWin < 100) {
+          // Mərcdən çox amma 100-dən az: Qəşəng 2 saniyəlik Popup
+          document.getElementById('nice-win-val').innerText = totalWin.toFixed(2);
+          overlay.className = 'win-overlay show show-nice';
+          setTimeout(() => { overlay.className = 'win-overlay'; }, 2000);
+        } 
+        else if (totalWin >= 100) {
+          // 100 AZN və daha yuxarı: BIG WIN (Uzun və Epik)
+          document.getElementById('big-win-val').innerText = totalWin.toFixed(2);
+          overlay.className = 'win-overlay show show-big';
+          setTimeout(() => { overlay.className = 'win-overlay'; }, 4000);
+        }
       }
 
       document.getElementById('spin-button').disabled = false;
