@@ -12,41 +12,32 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background: #0b0b10; color: #fff; }
     
-    /* Login Ekranı */
     #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0b10; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
     .login-box { background: #16161e; padding: 30px; border-radius: 12px; border: 1px solid #ff007f; text-align: center; width: 90%; max-width: 350px; box-shadow: 0 0 20px rgba(255, 0, 127, 0.2); }
     .login-box h2 { color: #ff007f; margin-bottom: 20px; text-transform: uppercase; }
     .login-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0b0b10; color: #fff; margin-bottom: 15px; font-size: 16px; text-align: center; outline: none; }
     .login-box button { width: 100%; background: #ff007f; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
 
-    /* Əsas Struktur */
     .header { background: #16161e; padding: 15px; text-align: center; border-bottom: 1px solid #222230; position: relative; }
     .header h1 { font-size: 18px; color: #ff007f; text-transform: uppercase; }
     .back-btn { position: absolute; left: 15px; top: 15px; background: #222230; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; display: none; }
 
     .container { padding: 20px; max-width: 600px; margin: 0 auto; }
 
-    /* Dashboard Paneli */
     .stats-panel { display: flex; gap: 15px; margin-bottom: 30px; }
     .stat-card { flex: 1; background: #16161e; border: 1px solid #222230; border-radius: 12px; padding: 20px; text-align: center; }
     .stat-title { font-size: 12px; color: #aaa; font-weight: bold; text-transform: uppercase; }
     .stat-value { font-size: 32px; font-weight: 900; color: #00e676; margin-top: 10px; }
 
-    .big-square-btn {
-      width: 100%; aspect-ratio: 2/1; background: linear-gradient(135deg, #1f1f2e, #16161e);
-      border: 2px solid #ff007f; border-radius: 16px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; cursor: pointer; color: #fff; transition: 0.2s;
-    }
+    .big-square-btn { width: 100%; aspect-ratio: 2/1; background: linear-gradient(135deg, #1f1f2e, #16161e); border: 2px solid #ff007f; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: #fff; transition: 0.2s; }
     .big-square-btn:hover { background: #ff007f; color: #fff; }
     .big-square-btn span { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
 
-    /* Axtarış Qutusu */
     .search-box { width: 100%; padding: 12px; background: #16161e; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 15px; margin-bottom: 15px; outline: none; }
     .search-box:focus { border-color: #ff007f; }
 
-    /* Oyunçular Siyahısı Ekranı */
     .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-    .tab-btn { flex: 1; padding: 10px; background: #16161e; border: 1px solid #333; color: #aaa; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .tab-btn { flex: 1; padding: 10px; background: #16161e; border: 1px solid #333; color: #aaa; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: center; }
     .tab-btn.active { background: #ff007f; color: #fff; border-color: #ff007f; }
 
     .player-list { display: flex; flex-direction: column; gap: 10px; }
@@ -57,7 +48,6 @@
     .dot-online { background: #00e676; box-shadow: 0 0 8px #00e676; }
     .dot-offline { background: #ff3d00; box-shadow: 0 0 8px #ff3d00; }
 
-    /* Oyunçu Detal Ekranı */
     .detail-card { background: #16161e; border: 1px solid #222230; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
     .detail-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
     .detail-id { font-size: 20px; font-weight: 900; color: #fff; }
@@ -84,7 +74,6 @@
 </head>
 <body>
 
-  <!-- Təhlükəsizlik Login Ekranı -->
   <div id="login-screen">
     <div class="login-box">
       <h2>Sistemə Giriş</h2>
@@ -100,8 +89,6 @@
   </div>
 
   <div class="container">
-    
-    <!-- Dashboard Ekranı -->
     <div id="dashboard-view">
       <div class="stats-panel">
         <div class="stat-card">
@@ -113,28 +100,20 @@
           <div class="stat-value" id="stat-active" style="color: #ff007f;">0</div>
         </div>
       </div>
-      
       <div class="big-square-btn" onclick="showView('list-view')">
         <span>Oyunçular</span>
       </div>
     </div>
 
-    <!-- Oyunçular Siyahısı Ekranı -->
     <div id="list-view" class="hidden">
-      <!-- Axtarış Qutusu -->
       <input type="text" id="search-input" class="search-box" placeholder="Oyunçu ID-si ilə axtar..." oninput="renderList()">
-
       <div class="tabs">
         <div class="tab-btn active" id="tab-all" onclick="filterList('all')">Hamısı</div>
         <div class="tab-btn" id="tab-active" onclick="filterList('active')">Aktiv Olanlar</div>
       </div>
-      
-      <div class="player-list" id="players-container">
-        <!-- Siyahı JS ilə yüklənəcək -->
-      </div>
+      <div class="player-list" id="players-container"></div>
     </div>
 
-    <!-- Oyunçu Parametrləri (Detal) Ekranı -->
     <div id="detail-view" class="hidden">
       <div class="detail-card">
         <div class="detail-header">
@@ -155,7 +134,7 @@
         </div>
 
         <div class="control-group">
-          <label class="control-label">Uduş Şansı (%)</label>
+          <label class="control-label">Uduş Şansı (%) - Standart 20%</label>
           <div class="input-row">
             <button onclick="adjustVal('det-win', -5)">-</button>
             <input type="number" id="det-win" min="0" max="100">
@@ -170,7 +149,6 @@
         <button class="save-btn" onclick="saveUserData()">Məlumatları Yadda Saxla</button>
       </div>
     </div>
-
   </div>
 
   <script>
@@ -183,7 +161,6 @@
       }
     }
 
-    // FİREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyDVpLxlBl9U-UTT9wGDluUdNkPgkRBKDfA",
       authDomain: "diva-casino.firebaseapp.com",
@@ -201,7 +178,6 @@
     let selectedUserDoc = null;
     let currentView = 'dashboard-view';
 
-    // Real-time məlumat axını
     db.collection("users").onSnapshot(snapshot => {
       allUsers = [];
       let activeCount = 0;
@@ -234,16 +210,12 @@
       } else {
         document.getElementById("back-btn").style.display = "block";
       }
-
       if (viewId === 'list-view') renderList();
     }
 
     function goBack() {
-      if (currentView === 'detail-view') {
-        showView('list-view');
-      } else if (currentView === 'list-view') {
-        showView('dashboard-view');
-      }
+      if (currentView === 'detail-view') showView('list-view');
+      else if (currentView === 'list-view') showView('dashboard-view');
     }
 
     function filterList(type) {
@@ -254,23 +226,14 @@
       renderList();
     }
 
-    // Oyunçuları Siyahıtlama və Axtarış Məntiqi
     function renderList() {
       const container = document.getElementById("players-container");
       const searchQuery = document.getElementById("search-input").value.trim().toLowerCase();
       container.innerHTML = "";
 
       let filteredUsers = allUsers;
-
-      // Tab filteri
-      if (currentFilter === 'active') {
-        filteredUsers = filteredUsers.filter(u => u.isOnline);
-      }
-
-      // ID axtarış filteri
-      if (searchQuery !== "") {
-        filteredUsers = filteredUsers.filter(u => u.uid.toLowerCase().includes(searchQuery));
-      }
+      if (currentFilter === 'active') filteredUsers = filteredUsers.filter(u => u.isOnline);
+      if (searchQuery !== "") filteredUsers = filteredUsers.filter(u => u.uid.toLowerCase().includes(searchQuery));
 
       if (filteredUsers.length === 0) {
         container.innerHTML = "<div style='text-align:center; color:#777; padding:20px;'>Oyunçu tapılmadı</div>";
@@ -281,12 +244,9 @@
         const div = document.createElement("div");
         div.className = "player-row";
         div.onclick = () => openUserDetail(user.uid);
-        
         const dotClass = user.isOnline ? "dot-online" : "dot-offline";
         div.innerHTML = `
-          <div class="player-info">
-            <span class="dot ${dotClass}"></span> ID: ${user.uid}
-          </div>
+          <div class="player-info"><span class="dot ${dotClass}"></span> ID: ${user.uid}</div>
           <div style="font-size:12px; color:#aaa;">${Number(user.balance || 0).toFixed(2)} AZN</div>
         `;
         container.appendChild(div);
@@ -302,7 +262,8 @@
       document.getElementById("det-game").innerText = selectedUserDoc.currentGame ? "Hal-hazırda: " + selectedUserDoc.currentGame : "Hal-hazırda: Ana Səhifə";
       
       document.getElementById("det-bal").value = selectedUserDoc.balance || 0;
-      document.getElementById("det-win").value = selectedUserDoc.winRate !== undefined ? selectedUserDoc.winRate : 50;
+      // DİQQƏT: Yeni sistemlə standart şans 20-dir
+      document.getElementById("det-win").value = selectedUserDoc.winRate !== undefined ? selectedUserDoc.winRate : 20;
       
       const banBtn = document.getElementById("det-ban-btn");
       if (selectedUserDoc.isBanned) {
@@ -312,7 +273,6 @@
         banBtn.innerText = "Saytdan Blokla";
         banBtn.className = "ban-btn btn-block";
       }
-
       showView('detail-view');
     }
 
@@ -342,11 +302,11 @@
 
     function saveUserData() {
       const newBal = parseFloat(document.getElementById("det-bal").value) || 0;
-      const newWin = parseFloat(document.getElementById("det-win").value) || 50;
+      const newWin = parseFloat(document.getElementById("det-win").value);
 
       db.collection("users").doc(selectedUserId).update({
         balance: newBal,
-        winRate: newWin,
+        winRate: isNaN(newWin) ? 20 : newWin,
         isBanned: selectedUserDoc.isBanned || false
       }).then(() => {
         alert("Məlumatlar uğurla yeniləndi!");
